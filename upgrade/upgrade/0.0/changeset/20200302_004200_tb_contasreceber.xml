@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200302_004200" author="Leandro Zanatta" logicalFilePath="20200302_004200_tb_contasreceber.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_contasreceber" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_contasreceber">
+
+			<column name="id_contasreceber" type="${numeric.18x0}" remarks="CÓDIGO IDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="contasreceber_pk" nullable="false" />
+			</column>
+
+			<column name="cd_cliente" type="${numeric.18x0}" remarks="CÓDIGO DO CLIENTE">
+				<constraints nullable="false" foreignKeyName="contasreceber_cliente_fk" references="tb_cliente(id_cliente)" />
+			</column>
+
+			<column name="cd_formaspagamento" type="${numeric.18x0}" remarks="CÓDIGO DA FORMA DE PAGAMENTO OPTADA">
+				<constraints nullable="false" foreignKeyName="pagamento_contasreceber_fk" references="tb_formapagamento(id_formapagamento)" />
+			</column>
+
+			<column name="dt_vencimento" type="${date}" remarks="DATA DE VENCIMENTO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_programa" type="${varchar.5}" remarks="CÓDIGO DO PROGRAMA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="vl_parcela" type="${numeric.18x2}" remarks="VALOR DA PARCELA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="vl_desconto" type="${numeric.18x2}" remarks="VALOR DO DESCONTO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="vl_acrescimo" type="${numeric.18x2}" remarks="VALOR DO ACRÉSCIMO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="vl_juros" type="${numeric.18x2}" remarks="VALOR DOS JUROS">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="vl_pago" type="${numeric.18x2}" remarks="VALOR PAGO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_cadastro" type="${timestamp}" remarks="DATA DE CADASTRO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_manutencao" type="${timestamp}" remarks="DATA DE MANUTENÇÃO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="fl_baixado" type="${boolean}" remarks="DOCUMENTO BAIXADO?">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_status" type="${numeric.2x0}" remarks="STÁTUS DA CONTA">
+				<constraints nullable="false" />
+			</column>
+
+		</createTable>
+
+		<createSequence sequenceName="gen_contasreceber" />
+	</changeSet>
+</databaseChangeLog>

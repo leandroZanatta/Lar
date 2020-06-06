@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="tb_cobrancamensalidade" author="Leandro Zanatta" logicalFilePath="20200306_184700_tb_cobrancamensalidade.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_cobrancamensalidade" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_cobrancamensalidade">
+
+			<column name="id_cobrancamensalidade" type="${numeric.18x0}" remarks="CÓDIGO IDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="cobrancamensalidade_pk" nullable="false" />
+			</column>
+
+			<column name="cd_cliente" type="${numeric.18x0}" remarks="CÓDIGO DO CLIENTE">
+				<constraints nullable="false" foreignKeyName="cobrancamensalidade_cliente_fk" references="tb_cliente(id_cliente)" />
+			</column>
+
+			<column name="cd_contasreceber" type="${numeric.18x0}" remarks="CÓDIGO DO CONTAS A RECEBER REFERENTE Á MENSALIDADE">
+				<constraints nullable="false" foreignKeyName="cobrancamensalidade_conta_fk" references="tb_contasreceber(id_contasreceber)" />
+			</column>
+
+			<column name="cd_referencia" type="${varchar.20}" remarks="MM/YYYY REFERENTE Á MENSALIDADE">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="vl_mensalidade" type="${numeric.18x2}" remarks="VALOR DA MENSALIDADE">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_cadastro" type="${timestamp}" remarks="DATA DE CADASTRO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_manutencao" type="${timestamp}" remarks="DATA DE MANUTENÇÃO">
+				<constraints nullable="false" />
+			</column>
+
+
+		</createTable>
+
+		<createSequence sequenceName="gen_cobrancamensalidade" />
+	</changeSet>
+</databaseChangeLog>

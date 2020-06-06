@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="202002117_171500" author="Leandro Zanatta" logicalFilePath="202002117_171500_tb_evolucaodetalhe.xml">
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_evolucaodetalhe" />
+			</not>
+		</preConditions>
+		<createTable tableName="tb_evolucaodetalhe">
+
+			<column name="id_evolucaodetalhe" type="${numeric.18x0}" remarks="CÓDIGO INDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="evolucaodetalhe_pk" nullable="false" />
+			</column>
+
+			<column name="cd_evolucaopaciente" type="${numeric.18x0}" remarks="CÓDIGO DA EVOLUCAO DO PACIENTE">
+				<constraints nullable="false" foreignKeyName="evolucaopaciente_cabecalho_fk" references="tb_evolucaopaciente(id_evolucaopaciente)" />
+			</column>
+
+			<column name="cd_usuario" type="${numeric.18x0}" remarks="CÓDIGO DO USUÁRIO">
+				<constraints nullable="false" foreignKeyName="evolucao_usuario_fk" references="tb_usuario(id_usuario)" />
+			</column>
+
+			<column name="tx_evolucao" type="${blob.text}" remarks="EVOLUÇÃO DO PACIENTE">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_cadastro" type="${timestamp}" remarks="DATA DO CADASTRO DA EVOLUÇÃO">
+				<constraints nullable="false" />
+			</column>
+
+		</createTable>
+
+		<createSequence sequenceName="gen_evolucaodetalhe" />
+
+	</changeSet>
+</databaseChangeLog>

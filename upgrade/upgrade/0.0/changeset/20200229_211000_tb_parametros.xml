@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200229_211000" author="Leandro Zanatta" logicalFilePath="20200229_211000_tb_parametros.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_parametros" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_parametros">
+
+			<column name="id_parametro" type="${numeric.18x0}" remarks="CÓDIGO IDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="parametros_pk" nullable="false" />
+			</column>
+
+			<column name="tx_mensalidade" type="${blob.text}" remarks="PARÂMETROS DAS MENSALIDADES">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="tx_email" type="${blob.text}" remarks="PARÂMETROS DE EMAIL">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_cadastro" type="${timestamp}" remarks="DATA DE CADASTRO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_manutencao" type="${timestamp}" remarks="DATA DE MANUTENÇÃO">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+</databaseChangeLog>

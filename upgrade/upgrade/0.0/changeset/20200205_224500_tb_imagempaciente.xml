@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200205_224500" author="Leandro Zanatta" logicalFilePath="20200205_224500_tb_imagempaciente.xml">
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_imagempaciente" />
+			</not>
+		</preConditions>
+		<createTable tableName="tb_imagempaciente">
+
+			<column name="id_imagempaciente" type="${numeric.18x0}" remarks="CÓDIGO INDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="imagempaciente_pk" nullable="false" />
+			</column>
+
+			<column name="cd_paciente" type="${numeric.18x0}" remarks="CÓDIGO DO PACIENTE">
+				<constraints nullable="false" foreignKeyName="imagempaciente_paciente_fk" references="tb_paciente(id_paciente)" />
+			</column>
+
+			<column name="tx_width" type="${numeric.18x0}" remarks="LARGURA DA IMAGEM">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="tx_height" type="${numeric.18x0}" remarks="ALTURA DA IMAGEM">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="tx_extensao" type="${varchar.10}" remarks="EXTENSÃO DA IMAGEM">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="tx_imagem" type="${blob.binary}" remarks="ARQUIVO DA IMAGEM">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<createSequence sequenceName="gen_imagempaciente" />
+
+	</changeSet>
+</databaseChangeLog>

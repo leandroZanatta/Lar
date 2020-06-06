@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200306_184503" author="Leandro Zanatta" logicalFilePath="20200306_184503_tb_boletodadospagamento.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_boletodadospagamento" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_boletodadospagamento">
+
+			<column name="cd_boleto" type="${numeric.18x0}" remarks="CÓDIGO IDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="boletodadospagamento_pk" foreignKeyName="boletodadospagamento_boleto_fk"
+					references="tb_boleto(id_boleto)" nullable="false" />
+			</column>
+
+			<column name="cd_protesto" type="${numeric.5x0}" remarks="CÓDIGO DO PROTESTO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_diasprotesto" type="${numeric.5x0}" remarks="DIAS APÓS O VENCIMENTO PROTESTAR">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="tx_modalidade" type="${varchar.5}" remarks="CÓDIGO DA MODALIDADE">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_carteira" type="${numeric.5x0}" remarks="CÓDIGO DA CARTEIRA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_jurosmora" type="${numeric.2x0}" remarks="CÓDIGO DOS JUROS/MORA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_jurosmora" type="${date}" remarks="DATA JUROS/MORA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="vl_jurosmora" type="${numeric.18x2}" remarks="VALOR DOA JUROS/MORA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_multa" type="${numeric.2x0}" remarks="CÓDIGO DA MULTA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_multa" type="${date}" remarks="DATA DA MULTA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="vl_multa" type="${numeric.18x2}" remarks="VALOR DA MULTA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_limitepagamento" type="${date}" remarks="DATA LIMITE PARA PAGAMENTO">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+	</changeSet>
+</databaseChangeLog>

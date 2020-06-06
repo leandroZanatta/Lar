@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200306_184600" author="Leandro Zanatta" logicalFilePath="20200306_184600_tb_contasreceberboleto.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_contasreceberboleto" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_contasreceberboleto">
+
+			<column name="cd_boleto" type="${numeric.18x0}" remarks="CÓDIGO DO BOLETO">
+				<constraints primaryKey="true" primaryKeyName="contasreceberboleto_pk" nullable="false" foreignKeyName="contasreceberboleto_boleto_fk"
+					references="tb_boleto(id_boleto)" />
+			</column>
+
+			<column name="cd_contasreceber" type="${numeric.18x0}" remarks="CÓDIGO DO CLIENTE">
+				<constraints primaryKey="true" primaryKeyName="contasreceberboleto_pk" nullable="false"
+					foreignKeyName="contasreceberboleto_contareceber_fk" references="tb_contasreceber(id_contasreceber)" />
+			</column>
+		</createTable>
+	</changeSet>
+</databaseChangeLog>

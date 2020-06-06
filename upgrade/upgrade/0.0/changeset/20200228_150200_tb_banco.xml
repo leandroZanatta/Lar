@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200228_150200" author="Leandro Zanatta" logicalFilePath="20200228_150200_tb_banco.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_banco" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_banco">
+
+			<column name="id_banco" type="${numeric.18x0}" remarks="CÓDIGO IDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="banco_pk" nullable="false" />
+			</column>
+
+			<column name="nr_banco" type="${numeric.5x0}" remarks="NÚMERO DO BANCO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_agencia" type="${varchar.20}" remarks="NÚMERO DA AGÊNCIA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_conta" type="${varchar.20}" remarks="NÚMERO DA CONTA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_situacao" type="${numeric.3x0}" remarks="CÓDIGO DA SITUAÇÃO">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<createSequence sequenceName="gen_banco" />
+	</changeSet>
+</databaseChangeLog>

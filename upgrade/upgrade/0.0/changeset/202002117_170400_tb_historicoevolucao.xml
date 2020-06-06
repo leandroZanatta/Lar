@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="202002117_170400" author="Leandro Zanatta" logicalFilePath="202002117_170400_tb_historicoevolucao.xml">
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_historicoevolucao" />
+			</not>
+		</preConditions>
+		<createTable tableName="tb_historicoevolucao">
+
+			<column name="id_historicoevolucao" type="${numeric.18x0}" remarks="CÓDIGO INDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="historicoevolucao_pk" nullable="false" />
+			</column>
+
+			<column name="tx_descricao" type="${varchar.100}" remarks="BREVE DESCRIÇÃO DO HISTÓRICO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="tx_historico" type="${blob.text}" remarks="HISTÓRICO DA EVOLUCAO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_cadastro" type="${date}" remarks="DATA DE CADASTRO">
+				<constraints nullable="false" />
+			</column>
+
+		</createTable>
+
+		<createSequence sequenceName="gen_historicoevolucao" />
+
+	</changeSet>
+</databaseChangeLog>

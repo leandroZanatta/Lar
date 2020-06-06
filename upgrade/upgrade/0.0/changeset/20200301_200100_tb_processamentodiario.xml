@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200301_200100" author="Leandro Zanatta" logicalFilePath="20200301_200100_tb_processamentodiario.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_processamentodiario" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_processamentodiario">
+
+			<column name="id_processamentodiario" type="${numeric.18x0}" remarks="CÓDIGO IDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="processamentodiario_pk" nullable="false" />
+			</column>
+
+			<column name="dt_procesamento" type="${date}" remarks="DATA DO PROCESAMENTO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_status" type="${numeric.2x0}" remarks="STÁTUS DO PROCESSAMENTO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_inicio" type="${timestamp}" remarks="DATA DE INÍCIO DO PROCESSAMENTO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_fim" type="${timestamp}" remarks="DATA DE CONCLUSÃO DO PROCESSAMENTO" />
+		</createTable>
+
+		<createSequence sequenceName="gen_processamentodiario" />
+	</changeSet>
+</databaseChangeLog>

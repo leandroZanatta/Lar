@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200205_224300" author="Leandro Zanatta" logicalFilePath="20200205_224300_tb_paciente.xml">
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_paciente" />
+			</not>
+		</preConditions>
+		<createTable tableName="tb_paciente">
+
+			<column name="id_paciente" type="${numeric.18x0}" remarks="CÓDIGO INDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="paciente_pk" nullable="false" />
+			</column>
+
+			<column name="cd_cliente" type="${numeric.18x0}" remarks="CÓDIGO DO CLIENTE">
+				<constraints nullable="false" foreignKeyName="paciente_cliente_fk" references="tb_cliente(id_cliente)" />
+			</column>
+
+			<column name="cd_procedencia" type="${numeric.18x0}" remarks="CÓDIGO DA PROCEDÊNCIA">
+				<constraints nullable="false" foreignKeyName="paciente_procedencia_fk" references="tb_procedencia(id_procedencia)" />
+			</column>
+
+			<column name="dt_admissao" type="${date}" remarks="DATA DE ADMISSÃO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_cartaosus" type="${numeric.18x0}" remarks="NÚMERO DO CARTÃO DO SUS">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="tx_ocupacaoinss" type="${varchar.100}" remarks="OCUPAÇÃO JUNTO AO INSS">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_status" type="${numeric.3x0}" remarks="STÁTUS DO PACIENTE">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_responsavel" type="${numeric.18x0}" remarks="CÓDIGO DO RESPONSÁVEL">
+				<constraints foreignKeyName="paciente_responsavel_fk" references="tb_cliente(id_cliente)" />
+			</column>
+
+		</createTable>
+
+		<createSequence sequenceName="gen_paciente" />
+
+	</changeSet>
+</databaseChangeLog>

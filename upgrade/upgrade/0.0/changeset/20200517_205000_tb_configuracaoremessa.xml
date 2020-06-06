@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200517_205000" author="Leandro Zanatta" logicalFilePath="20200517_205000_tb_configuracaoremessa.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_configuracaoremessa" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_configuracaoremessa">
+
+			<column name="nr_banco" type="${numeric.18x0}" remarks="Código do Banco">
+				<constraints primaryKey="true" primaryKeyName="configuracaoremessa_pk" nullable="false" />
+			</column>
+
+			<column name="nr_remessa" type="${numeric.18x0}" remarks="NÚMERO DA REMESSA">
+				<constraints nullable="false" />
+			</column>
+
+		</createTable>
+	</changeSet>
+</databaseChangeLog>

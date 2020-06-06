@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="Lar">
+		<class>br.com.lar.repository.model.Cidade</class>
+		<class>br.com.lar.repository.model.Cliente</class>
+		<class>br.com.lar.repository.model.Estado</class>
+		<class>br.com.sysdesc.pesquisa.repository.model.PermissaoPesquisa</class>
+		<class>br.com.lar.repository.model.PermissaoPrograma</class>
+		<class>br.com.sysdesc.pesquisa.repository.model.Pesquisa</class>
+		<class>br.com.sysdesc.pesquisa.repository.model.PesquisaCampo</class>
+		<class>br.com.sysdesc.pesquisa.repository.model.PesquisaPadrao</class>
+		<class>br.com.lar.repository.model.Programa</class>
+		<class>br.com.lar.repository.model.Versao</class>
+		<class>br.com.lar.repository.model.Paciente</class>
+		<class>br.com.lar.repository.model.Procedencia</class>
+		<class>br.com.lar.repository.model.Funcionario</class>
+		<class>br.com.lar.repository.model.Salario</class>
+		<class>br.com.lar.repository.model.ImagemPaciente</class>
+		<class>br.com.lar.repository.model.Grupo</class>
+		<class>br.com.lar.repository.model.VersaoServidor</class>
+		<class>br.com.lar.repository.model.HistoricoEvolucao</class>
+		<class>br.com.lar.repository.model.EvolucaoDetalhe</class>
+		<class>br.com.lar.repository.model.EvolucaoPaciente</class>
+		<class>br.com.lar.repository.model.FormasPagamento</class>
+		<class>br.com.lar.repository.model.MensalidadePaciente</class>
+		<class>br.com.lar.repository.model.PlanoContas</class>
+		<class>br.com.lar.repository.model.Parametros</class>
+		<class>br.com.lar.repository.model.ProcessamentoDiario</class>
+		<class>br.com.lar.repository.model.ContasReceber</class>
+		<class>br.com.lar.repository.model.CobrancaMensalidade</class>
+		<class>br.com.sysdesc.boleto.repository.model.Banco</class>
+		<class>br.com.sysdesc.boleto.repository.model.ConfiguracaoBoleto</class>
+		<class>br.com.sysdesc.boleto.repository.model.Boleto</class>
+		<class>br.com.sysdesc.pesquisa.repository.model.Usuario</class>
+		<class>br.com.sysdesc.pesquisa.repository.model.Perfil</class>
+		<class>br.com.sysdesc.pesquisa.repository.model.PerfilUsuario</class>
+		<class>br.com.lar.repository.model.ContasReceberBoleto</class>
+		<class>br.com.sysdesc.boleto.repository.model.BoletoDadosCliente</class>
+		<class>br.com.sysdesc.boleto.repository.model.BoletoDadosPagamento</class>
+		<class>br.com.sysdesc.boleto.repository.model.BoletoDadosSacadorAvalista</class>
+		<class>br.com.sysdesc.boleto.repository.model.Remessa</class>
+		<class>br.com.sysdesc.boleto.repository.model.ConfiguracaoRemessa</class>
+		<class>br.com.sysdesc.boleto.repository.model.RemessaBoleto</class>
+		<class>br.com.sysdesc.boleto.repository.model.pk.RemessaBoletoPk</class>
+		<class>br.com.lar.repository.model.Email</class>
+		<class>br.com.lar.repository.model.EmailAnexo</class>
+		<class>br.com.lar.repository.model.EmailBoleto</class>
+		<class>br.com.lar.repository.model.pk.EmailBoletoPk</class>
+
+	</persistence-unit>
+
+</persistence>

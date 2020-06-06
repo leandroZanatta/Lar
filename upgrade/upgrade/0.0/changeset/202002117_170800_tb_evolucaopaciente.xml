@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="202002117_170800" author="Leandro Zanatta" logicalFilePath="202002117_170800_tb_evolucaopaciente.xml">
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_evolucaopaciente" />
+			</not>
+		</preConditions>
+		<createTable tableName="tb_evolucaopaciente">
+
+			<column name="id_evolucaopaciente" type="${numeric.18x0}" remarks="CÓDIGO INDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="evolucaopaciente_pk" nullable="false" />
+			</column>
+
+			<column name="cd_paciente" type="${numeric.18x0}" remarks="CÓDIGO DO PACIENTE">
+				<constraints nullable="false" foreignKeyName="evolucao_paciente_fk" references="tb_paciente(id_paciente)" />
+			</column>
+
+			<column name="dt_evolucao" type="${date}" remarks="DATA DE EVOLUÇÃO">
+				<constraints nullable="false" />
+			</column>
+
+		</createTable>
+
+		<createSequence sequenceName="gen_evolucaopaciente" />
+
+	</changeSet>
+</databaseChangeLog>

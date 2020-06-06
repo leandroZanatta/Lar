@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200306_184502" author="Leandro Zanatta" logicalFilePath="20200306_184502_tb_boletodadossacadoravalista.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_boletodadossacadoravalista" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_boletodadossacadoravalista">
+
+			<column name="cd_boleto" type="${numeric.18x0}" remarks="CÓDIGO IDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="boletodadossacadoravalista_pk" foreignKeyName="boletodadossacadoravalista_boleto_fk"
+					references="tb_boleto(id_boleto)" nullable="false" />
+			</column>
+
+			<column name="tx_cgc" type="${varchar.18}" remarks="DOCUMENTO DO CLIENTE(CPF OU CNPJ)">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="tx_nome" type="${varchar.100}" remarks="NOME DO CLIENTE OU RAZÃO SOCIAL">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="fl_tipocliente" type="${varchar.1}" remarks="TIPO DE CLIENTE (FÍSICA-F OU JURÍDICA-J)">
+				<constraints nullable="false" />
+			</column>
+
+		</createTable>
+
+	</changeSet>
+</databaseChangeLog>

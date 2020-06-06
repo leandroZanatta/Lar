@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200518_000000" author="Leandro Zanatta" logicalFilePath="20200518_000000_tb_emailboleto.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_emailboleto" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_emailboleto">
+
+			<column name="cd_email" type="${numeric.18x0}" remarks="CÓDIGO DO EMAIL">
+				<constraints primaryKey="true" primaryKeyName="emailboleto_pk" nullable="false" foreignKeyName="emailboleto_email_fk"
+					references="tb_email(id_email)" />
+			</column>
+
+			<column name=" cd_boleto " type="${numeric.18x0}" remarks="CÓDIGO DO BOLETO">
+				<constraints primaryKey="true" primaryKeyName="emailboleto_pk" nullable="false" foreignKeyName="emailboleto_boleto_fk"
+					references="tb_boleto(id_boleto)" />
+			</column>
+		</createTable>
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200228_161300" author="Leandro Zanatta" logicalFilePath="20200228_161300_tb_mensalidadepaciente.xml">
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_mensalidadepaciente" />
+			</not>
+		</preConditions>
+		<createTable tableName="tb_mensalidadepaciente">
+
+			<column name="cd_paciente" type="${numeric.18x0}" remarks="CÓDIGO DO PACIENTE">
+				<constraints nullable="false" primaryKeyName="mensalidadepaciente_pk" foreignKeyName="mensalidade_paciente_fk"
+					references="tb_paciente(id_paciente)" />
+			</column>
+
+			<column name="cd_formapagamento" type="${numeric.18x0}" remarks="CÓDIGO DA FORMA DE PAGAMENTO HABITUAL">
+				<constraints nullable="false" foreignKeyName="pagamento_paciente_fk" references="tb_formapagamento(id_formapagamento)" />
+			</column>
+
+			<column name="vl_mensalidade" type="${numeric.18x2}" remarks="VALOR DA MENSALIDADE">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_diavencimento" type="${numeric.18x0}" remarks="DIA DE VENCIMENTO DA MENSALIDADE">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_diasantecedencia" type="${numeric.2x0}" remarks="ENVIO DE BOLETOS COM ${DIAS} DE ANTECEDÊNCIA" />
+
+			<column name="fl_envioautomaticoboletos" type="${boolean}" remarks="UTILIZA ENVIO AUTOMÁTICO DE BOLETOS" />
+
+			<column name="fl_agruparcontas" type="${boolean}" remarks="AGRUPAR CONTAS A RECEBER" />
+
+			<column name="dt_cadastro" type="${timestamp}" remarks="DATA DO CADASTRO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_manutencao" type="${timestamp}" remarks="DATA DE MANUTENÇÃO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_exclusao" type="${timestamp}" remarks="DATA DE EXCLUSÃO" />
+
+		</createTable>
+
+	</changeSet>
+</databaseChangeLog>

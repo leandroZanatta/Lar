@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200517_221700" author="Leandro Zanatta" logicalFilePath="20200517_221700_tb_email.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_email" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_email">
+
+			<column name="id_email" type="${numeric.18x0}" remarks="CÓDIGO IDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="email_pk" nullable="false" />
+			</column>
+
+			<column name="tx_destinatario" type="${varchar.100}" remarks="EMAIL DO DESTINATÁRIO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="tx_assunto" type="${varchar.100}" remarks="ASSUNTO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="tx_mensagem" type="${blob.text}" remarks="CONTEÚDO DA MENSAGEM">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_status" type="${numeric.18x0}" remarks="CÓDIGO DO STATUS">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<createSequence sequenceName="gen_email" />
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+	<include file="0.0/changeset/20190508_215100_tb_estado.xml" />
+	<include file="0.0/changeset/20190508_215600_tb_cidade.xml" />
+	<include file="0.0/changeset/20190508_215700_tb_grupo.xml" />
+	<include file="0.0/changeset/20190508_215800_tb_cliente.xml" />
+	<include file="0.0/changeset/20190508_220000_tb_perfil.xml" />
+	<include file="0.0/changeset/20190508_220400_tb_usuario.xml" />
+	<include file="0.0/changeset/20190508_221100_tb_perfilusuario.xml" />
+	<include file="0.0/changeset/20190508_221800_tb_pesquisa.xml" />
+	<include file="0.0/changeset/20190508_223000_tb_pesquisacampo.xml" />
+	<include file="0.0/changeset/20190508_223300_tb_permissaopesquisa.xml" />
+	<include file="0.0/changeset/20190511_181200_tb_programa.xml" />
+	<include file="0.0/changeset/20190511_181600_tb_permissaoprograma.xml" />
+	<include file="0.0/changeset/20190508_221900_tb_pesquisaselect.xml" />
+	<include file="0.0/changeset/20190630_230800_tb_versao.xml" />
+	<include file="0.0/changeset/20190630_230900_tb_versaoservidor.xml" />
+	<include file="0.0/changeset/20190921_211600_tb_pesquisapadrao.xml" />
+	<include file="0.0/changeset/20200205_224000_tb_procedencia.xml" />
+	<include file="0.0/changeset/20200205_224300_tb_paciente.xml" />
+	<include file="0.0/changeset/20200205_224500_tb_imagempaciente.xml" />
+	<include file="0.0/changeset/20200210_211100_tb_funcionario.xml" />
+	<include file="0.0/changeset/20200210_214600_tb_salario.xml" />
+	<include file="0.0/changeset/202002117_170400_tb_historicoevolucao.xml" />
+	<include file="0.0/changeset/202002117_170800_tb_evolucaopaciente.xml" />
+	<include file="0.0/changeset/20200228_150200_tb_banco.xml" />
+	<include file="0.0/changeset/20200228_153000_tb_formapagamento.xml" />
+	<include file="0.0/changeset/20200228_161300_tb_mensalidadepaciente.xml" />
+	<include file="0.0/changeset/20200229_173600_tb_planocontas.xml" />
+	<include file="0.0/changeset/20200229_211000_tb_parametros.xml" />
+	<include file="0.0/changeset/20200301_200100_tb_processamentodiario.xml" />
+	<include file="0.0/changeset/20200302_004200_tb_contasreceber.xml" />
+	<include file="0.0/changeset/20200305_223500_tb_configuracaoboleto.xml" />
+	<include file="0.0/changeset/20200306_184500_tb_boleto.xml" />
+	<include file="0.0/changeset/20200306_184501_tb_boletodadoscliente.xml" />
+	<include file="0.0/changeset/20200306_184502_tb_boletodadossacadoravalista.xml" />
+	<include file="0.0/changeset/20200306_184503_tb_boletodadospagamento.xml" />
+	<include file="0.0/changeset/20200306_184600_tb_contasreceberboleto.xml" />
+	<include file="0.0/changeset/20200306_184700_tb_cobrancamensalidade.xml" />
+	<include file="0.0/changeset/20200517_204300_tb_remessa.xml" />
+	<include file="0.0/changeset/20200517_205000_tb_configuracaoremessa.xml" />
+	<include file="0.0/changeset/20200517_212400_tb_remessaboleto.xml" />
+	<include file="0.0/changeset/20200517_221700_tb_email.xml" />
+	<include file="0.0/changeset/20200517_224400_tb_emailanexo.xml" />
+	<include file="0.0/changeset/20200518_000000_tb_emailboleto.xml" />
+
+	<!-- INSERTS PROGRAMAS E PESQUISAS -->
+	<include file="0.0/inserts/20190626_113800_carga_usuario.xml" />
+	<include file="0.0/inserts/20190626_113900_carga_menu.xml" />
+	<include file="0.0/inserts/20190626_115100_carga_pesquisa.xml" />
+	<include file="0.0/inserts/20190626_115101_carga_pesquisacampo.xml" />
+	<include file="0.0/inserts/20200229_201300_carga_planocontas.xml" />
+
+</databaseChangeLog>

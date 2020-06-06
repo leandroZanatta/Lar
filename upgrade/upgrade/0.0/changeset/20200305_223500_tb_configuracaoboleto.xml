@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200305_223500" author="Leandro Zanatta" logicalFilePath="20200305_223500_tb_configuracaoboleto.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_configuracaoboleto" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_configuracaoboleto">
+
+			<column name="id_configuracaoboleto" type="${numeric.18x0}" remarks="CÓDIGO IDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="configuracaoboleto_pk" nullable="false" />
+			</column>
+
+			<column name="cd_banco" type="${numeric.18x0}" remarks="CÓDIGO DO CLIENTE">
+				<constraints nullable="false" foreignKeyName="configuracaoboleto_banco_fk" references="tb_banco(id_banco)" />
+			</column>
+
+			<column name="fl_tipocliente" type="${varchar.1}" remarks="TIPO DE CLIENTE (FÍSICA-F OU JURÍDICA-J)">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_cgc" type="${varchar.20}" remarks="CPF/CNPJ DA CONTA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="tx_nome" type="${varchar.100}" remarks="NOME DO PROPRIETÁRIO DA CONTA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_carteira" type="${numeric.5x0}" remarks="CÓDIGO DA CARTEIRA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="tx_modalidade" type="${varchar.5}" remarks="CÓDIGO DA MODALIDADE">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_protesto" type="${numeric.5x0}" remarks="CÓDIGO DO PROTESTO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_multa" type="${numeric.2x0}" remarks="CÓDIGO DA MULTA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_diasmulta" type="${numeric.5x0}" remarks="DIAS APÓS O VENCIMENTO PARA APLICAR A MULTA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="vl_multa" type="${numeric.18x2}" remarks="VALOR DA MULTA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_jurosmora" type="${numeric.2x0}" remarks="CÓDIGO DOS JUROS/MORA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_diasjurosmora" type="${numeric.5x0}" remarks="DIAS APÓS O VENCIMENTO PARA APLICAR JUROS/MORA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="vl_jurosmora" type="${numeric.18x2}" remarks="VALOR DOA JUROS/MORA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_diasprotesto" type="${numeric.5x0}" remarks="DIAS APÓS O VENCIMENTO PROTESTAR">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_diasmaximopagamento" type="${numeric.5x0}" remarks="NÚMERO DE DIAS MÁXIMO PARA PAGAMENTO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_agencia" type="${varchar.20}" remarks="NÚMERO DA AGÊNCIA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_conta" type="${varchar.20}" remarks="NÚMERO DA CONTA">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_nossonumero" type="${numeric.18x0}" remarks="SEQUENCIAL NOSSO NÚMERO">
+				<constraints nullable="false" />
+			</column>
+
+		</createTable>
+
+		<createSequence sequenceName="gen_configuracaoboleto" />
+	</changeSet>
+</databaseChangeLog>

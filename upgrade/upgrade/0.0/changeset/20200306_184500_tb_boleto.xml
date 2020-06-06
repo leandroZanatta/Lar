@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200306_184500" author="Leandro Zanatta" logicalFilePath="20200306_184500_tb_boleto.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_boleto" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_boleto">
+
+			<column name="id_boleto" type="${numeric.18x0}" remarks="CÓDIGO IDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="boleto_pk" nullable="false" />
+			</column>
+
+			<column name="cd_configuracaoboleto" type="${numeric.18x0}" remarks="CÓDIGO DA CONFIGURAÇÃO DO BOLETO">
+				<constraints nullable="false" foreignKeyName="configuracaoboleto_boleto_fk" references="tb_configuracaoboleto(id_configuracaoboleto)" />
+			</column>
+
+			<column name="fl_aceite" type="${varchar.1}" remarks="ACEITE (A/N)">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_especietitulo" type="${numeric.5x0}" remarks="ESPÉCIE DE TÍTULO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_numerobanco" type="${numeric.18x0}" remarks="NÚMERO DO BANCO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_nossonumero" type="${varchar.20}" remarks="NOSSO NÚMERO CHAVE DE CADA BANCO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_codigobarras" type="${varchar.50}" remarks="CÓDIGO DE BARRAS DO BOLETO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="vl_boleto" type="${numeric.18x2}" remarks="VALOR DO BOLETO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_vencimento" type="${date}" remarks="DATA DE VENCIMENTO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_cadastro" type="${timestamp}" remarks="DATA DE CADASTRO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="bl_arquivo" type="${blob.binary}" remarks="PDF DO DOCUMENTO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_status" type="${numeric.2x0}" remarks="SITUAÇÃO DO BOLETO">
+				<constraints nullable="false" />
+			</column>
+
+		</createTable>
+
+		<createSequence sequenceName="gen_boleto" />
+	</changeSet>
+</databaseChangeLog>
