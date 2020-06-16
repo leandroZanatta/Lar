@@ -36,7 +36,7 @@ public class VersaoService {
 
 		InvocationRequest request = new DefaultInvocationRequest();
 		Invoker invoker = new DefaultInvoker();
-
+		invoker.setMavenHome(new File("C:\\maven"));
 		request.setBaseDirectory(pathDir);
 		request.setPomFile(new File(pathDir, "pom.xml"));
 		request.setGoals(Collections.singletonList("versions:set -DnewVersion=" + novaVersao));
