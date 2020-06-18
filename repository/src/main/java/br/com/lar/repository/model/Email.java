@@ -22,29 +22,29 @@ import lombok.Data;
 @Table(name = "tb_email")
 @SequenceGenerator(name = "GEN_EMAIL", allocationSize = 1, sequenceName = "GEN_EMAIL")
 public class Email implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "GEN_EMAIL")
-    @Column(name = "id_email")
-    private Long idEmail;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "GEN_EMAIL")
+	@Column(name = "id_email")
+	private Long idEmail;
 
-    @Column(name = "tx_destinatario")
-    private String destinatario;
+	@Column(name = "tx_destinatario")
+	private String destinatario;
 
-    @Column(name = "tx_assunto")
-    private String assunto;
+	@Column(name = "tx_assunto")
+	private String assunto;
 
-    @Column(name = "tx_mensagem")
-    private String mensagem;
+	@Column(name = "tx_mensagem")
+	private String mensagem;
 
-    @Column(name = "cd_status")
-    private Long codigoStatus;
+	@Column(name = "cd_status")
+	private Long codigoStatus;
 
-    @OneToOne(mappedBy = "email", fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
-    private EmailBoleto emailBoleto;
+	@OneToOne(mappedBy = "email", fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
+	private EmailBoleto emailBoleto;
 
-    @OneToMany(mappedBy = "email", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<EmailAnexo> emailAnexos;
+	@OneToMany(mappedBy = "email", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private List<EmailAnexo> emailAnexos;
 
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200617_194000" author="Leandro Zanatta" logicalFilePath="20200617_194000_tb_retornoboleto.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_retornoboleto" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_retornoboleto">
+
+			<column name="id_retornoboleto" type="${numeric.18x0}" remarks="CÓDIGO IDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="retornoboleto_pk" nullable="false" />
+			</column>
+
+			<column name="cd_retorno" type="${numeric.18x0}" remarks="CÓDIGO DO RETORNO">
+				<constraints nullable="false" foreignKeyName="retornoboleto_retorno_fk" references="tb_retorno(id_retorno)" />
+			</column>
+
+			<column name="nr_tiporetorno" type="${numeric.3x0}" remarks="TIPO DO MOVIMENTO DE RETORNO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_boleto" type="${numeric.18x0}" remarks="CÓDIGO DO BOLETO">
+				<constraints nullable="true" foreignKeyName="retornoboleto_boleto_fk" references="tb_boleto(id_boleto)" />
+			</column>
+
+			<column name="dt_cadastro" type="${timestamp}" remarks="DATA DE CADASTRO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_status" type="${numeric.18x0}" remarks="CÓDIGO DO STATUS">
+				<constraints nullable="false" />
+			</column>
+
+		</createTable>
+
+		<createSequence sequenceName="gen_retornoboleto" />
+	</changeSet>
+</databaseChangeLog>

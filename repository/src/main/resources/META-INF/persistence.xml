@@ -47,6 +47,8 @@
 		<class>br.com.lar.repository.model.EmailAnexo</class>
 		<class>br.com.lar.repository.model.EmailBoleto</class>
 		<class>br.com.lar.repository.model.pk.EmailBoletoPk</class>
+		<class>br.com.sysdesc.boleto.repository.model.Retorno</class>
+		<class>br.com.sysdesc.boleto.repository.model.RetornoBoleto</class>
 
 	</persistence-unit>
 

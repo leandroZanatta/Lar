@@ -69,5 +69,4 @@ public class GerarVersaoERP {
 
 		return this.versaoERP;
 	}
-
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd  http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	<changeSet id="20200617_170300" author="Leandro Zanatta" logicalFilePath="20200617_170300_tb_retorno.xml">
+
+		<preConditions onFail="CONTINUE">
+			<not>
+				<tableExists tableName="tb_retorno" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="tb_retorno">
+
+			<column name="id_retorno" type="${numeric.18x0}" remarks="CÓDIGO IDENTIFICADOR">
+				<constraints primaryKey="true" primaryKeyName="retorno_pk" nullable="false" />
+			</column>
+
+			<column name="nr_banco" type="${numeric.18x0}" remarks="NÚMERO DO BANCO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="nr_retorno" type="${numeric.18x0}" remarks="NÚMERO DO RETORNO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="bl_arquivo" type="${blob.binary}" remarks="ARQUIVO DE RETORNO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="dt_cadastro" type="${timestamp}" remarks="DATA DE CADASTRO">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="cd_status" type="${numeric.18x0}" remarks="CÓDIGO DO STATUS">
+				<constraints nullable="false" />
+			</column>
+
+		</createTable>
+
+		<createSequence sequenceName="gen_retorno" />
+	</changeSet>
+</databaseChangeLog>

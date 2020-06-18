@@ -10,7 +10,6 @@ import javax.swing.event.EventListenerList;
 
 import com.google.common.collect.Lists;
 
-import br.com.lar.repository.dao.EmailDAO;
 import br.com.syscesc.boleto.service.boleto.BoletoService;
 import br.com.syscesc.boleto.service.remessa.RemessaService;
 import br.com.sysdesc.boleto.repository.model.Boleto;
@@ -25,181 +24,174 @@ import br.com.sysdesc.util.enumeradores.TipoStatusRemessaEnum;
 
 public class RemessaTableModel extends AbstractInternalFrameTable {
 
-    private static final long serialVersionUID = 1L;
-    private List<Remessa> rows = new ArrayList<>();
-    private List<String> colunas = new ArrayList<>();
-    protected EventListenerList actionListener = new EventListenerList();
+	private static final long serialVersionUID = 1L;
+	private List<Remessa> rows = new ArrayList<>();
+	private List<String> colunas = new ArrayList<>();
+	protected EventListenerList actionListener = new EventListenerList();
 
-    public RemessaTableModel() {
+	public RemessaTableModel() {
 
-        colunas.add("Banco");
-        colunas.add("Remessa");
-        colunas.add("Data");
-        colunas.add("Boletos");
-        colunas.add("Situação");
-        colunas.add("Arquivo");
-    }
+		colunas.add("Banco");
+		colunas.add("Remessa");
+		colunas.add("Data");
+		colunas.add("Boletos");
+		colunas.add("Situação");
+		colunas.add("Arquivo");
+	}
 
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
 
-        Remessa remessa = rows.get(rowIndex);
+		Remessa remessa = rows.get(rowIndex);
 
-        switch (columnIndex) {
+		switch (columnIndex) {
 
-            case 0:
-                return TipoBancoEnum.forCodigo(remessa.getNumeroBanco()).getDescricao();
+		case 0:
+			return TipoBancoEnum.forCodigo(remessa.getNumeroBanco()).getDescricao();
 
-            case 1:
-                return NumericFormatter.format(remessa.getNumeroRemessa());
+		case 1:
+			return NumericFormatter.format(remessa.getNumeroRemessa());
 
-            case 2:
-                return DateUtil.format(DateUtil.FORMATO_DD_MM_YYYY_HH_MM_SS, remessa.getDataCadastro());
+		case 2:
+			return DateUtil.format(DateUtil.FORMATO_DD_MM_YYYY_HH_MM_SS, remessa.getDataCadastro());
 
-            case 3:
-                return NumericFormatter.format(remessa.getRemessaBoletos().size());
+		case 3:
+			return NumericFormatter.format(remessa.getRemessaBoletos().size());
 
-            case 4:
-                return TipoStatusRemessaEnum.findByCodigo(remessa.getCodigoStatus());
+		case 4:
+			return TipoStatusRemessaEnum.findByCodigo(remessa.getCodigoStatus());
 
-            default:
-                return null;
-        }
-    }
+		default:
+			return null;
+		}
+	}
 
-    @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+	@Override
+	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 
-        Remessa remessa = rows.get(rowIndex);
+		Remessa remessa = rows.get(rowIndex);
 
-        if (columnIndex == 4) {
+		if (columnIndex == 4) {
 
-            TipoStatusRemessaEnum tipoStatusRemessa = (TipoStatusRemessaEnum) aValue;
+			TipoStatusRemessaEnum tipoStatusRemessa = (TipoStatusRemessaEnum) aValue;
 
-            if (!remessa.getCodigoStatus().equals(tipoStatusRemessa.getCodigo())) {
-                remessa.setCodigoStatus(tipoStatusRemessa.getCodigo());
+			if (!remessa.getCodigoStatus().equals(tipoStatusRemessa.getCodigo())) {
+				remessa.setCodigoStatus(tipoStatusRemessa.getCodigo());
 
-                new RemessaService().salvar(remessa);
+				new RemessaService().salvar(remessa);
 
-                List<Boleto> boletos = remessa.getRemessaBoletos().stream().map(RemessaBoleto::getBoleto).collect(Collectors.toList());
+				List<Boleto> boletos = remessa.getRemessaBoletos().stream().map(RemessaBoleto::getBoleto).collect(Collectors.toList());
 
-                TipoStatusBoletoEnum tipoStatusBoletoEnum = TipoStatusRemessaEnum.GERADO.equals(tipoStatusRemessa)
-                        ? TipoStatusBoletoEnum.REMESSA_GERADA
-                        : TipoStatusBoletoEnum.REMESSA_ENVIADA;
+				TipoStatusBoletoEnum tipoStatusBoletoEnum = TipoStatusRemessaEnum.GERADO.equals(tipoStatusRemessa)
+						? TipoStatusBoletoEnum.REMESSA_GERADA
+						: TipoStatusBoletoEnum.REMESSA_ENVIADA;
 
-                boletos.forEach(boleto -> boleto.setCodigoStatus(tipoStatusBoletoEnum.getCodigo()));
+				boletos.forEach(boleto -> boleto.setCodigoStatus(tipoStatusBoletoEnum.getCodigo()));
 
-                new BoletoService().salvar(boletos);
+				new BoletoService().salvar(boletos);
 
-                if (tipoStatusBoletoEnum.equals(TipoStatusBoletoEnum.REMESSA_ENVIADA)) {
+				fireActionListener();
+			}
+		}
+	}
 
-                    List<Long> codigoBoletos = boletos.stream().mapToLong(Boleto::getIdBoleto).boxed().collect(Collectors.toList());
+	@Override
+	public int getColumnCount() {
+		return colunas.size();
+	}
 
-                    new EmailDAO().marcarBoletosParaEnvio(codigoBoletos);
-                }
+	@Override
+	public String getColumnName(int column) {
+		return colunas.get(column);
+	}
 
-                fireActionListener();
-            }
-        }
-    }
+	@Override
+	public int getRowCount() {
+		return rows.size();
+	}
 
-    @Override
-    public int getColumnCount() {
-        return colunas.size();
-    }
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
 
-    @Override
-    public String getColumnName(int column) {
-        return colunas.get(column);
-    }
+		if (columnIndex == 4) {
+			return TipoStatusRemessaEnum.class;
+		}
 
-    @Override
-    public int getRowCount() {
-        return rows.size();
-    }
+		if (columnIndex == 5) {
+			return JPanel.class;
+		}
 
-    @Override
-    public Class<?> getColumnClass(int columnIndex) {
+		return String.class;
+	}
 
-        if (columnIndex == 4) {
-            return TipoStatusRemessaEnum.class;
-        }
+	@Override
+	public boolean isCellEditable(int row, int column) {
+		if (column == 5 || column == 4) {
 
-        if (columnIndex == 5) {
-            return JPanel.class;
-        }
+			return Boolean.TRUE;
+		}
 
-        return String.class;
-    }
+		return Boolean.FALSE;
+	}
 
-    @Override
-    public boolean isCellEditable(int row, int column) {
-        if (column == 5 || column == 4) {
+	public Remessa getRow(int selectedRow) {
+		return rows.get(selectedRow);
+	}
 
-            return Boolean.TRUE;
-        }
+	public void remove(int selectedRow) {
+		rows.remove(selectedRow);
+		fireTableDataChanged();
+	}
 
-        return Boolean.FALSE;
-    }
+	public void removeAll() {
+		rows = new ArrayList<>();
+		fireTableDataChanged();
+	}
 
-    public Remessa getRow(int selectedRow) {
-        return rows.get(selectedRow);
-    }
+	public List<Remessa> getRows() {
+		return rows;
+	}
 
-    public void remove(int selectedRow) {
-        rows.remove(selectedRow);
-        fireTableDataChanged();
-    }
+	public void setRows(List<Remessa> rows) {
+		this.rows = Lists.newArrayList(rows);
+		fireTableDataChanged();
+	}
 
-    public void removeAll() {
-        rows = new ArrayList<>();
-        fireTableDataChanged();
-    }
+	public void addRow(Remessa remessa) {
 
-    public List<Remessa> getRows() {
-        return rows;
-    }
+		this.rows.add(remessa);
 
-    public void setRows(List<Remessa> rows) {
-        this.rows = Lists.newArrayList(rows);
-        fireTableDataChanged();
-    }
+		fireTableDataChanged();
+	}
 
-    public void addRow(Remessa remessa) {
+	@Override
+	public void clear() {
+		this.rows = new ArrayList<>();
 
-        this.rows.add(remessa);
+		fireTableDataChanged();
+	}
 
-        fireTableDataChanged();
-    }
+	@Override
+	public void setEnabled(Boolean enabled) {
 
-    @Override
-    public void clear() {
-        this.rows = new ArrayList<>();
+	}
 
-        fireTableDataChanged();
-    }
+	private void fireActionListener() {
 
-    @Override
-    public void setEnabled(Boolean enabled) {
+		Object[] listeners = actionListener.getListenerList();
 
-    }
+		for (int i = 0; i < listeners.length; i = i + 2) {
 
-    private void fireActionListener() {
+			if (listeners[i] == ActionListener.class) {
 
-        Object[] listeners = actionListener.getListenerList();
+				((ActionListener) listeners[i + 1]).actionPerformed(null);
+			}
+		}
+	}
 
-        for (int i = 0; i < listeners.length; i = i + 2) {
+	public void addActionListener(ActionListener listener) {
 
-            if (listeners[i] == ActionListener.class) {
-
-                ((ActionListener) listeners[i + 1]).actionPerformed(null);
-            }
-        }
-    }
-
-    public void addActionListener(ActionListener listener) {
-
-        actionListener.add(ActionListener.class, listener);
-    }
+		actionListener.add(ActionListener.class, listener);
+	}
 
 }

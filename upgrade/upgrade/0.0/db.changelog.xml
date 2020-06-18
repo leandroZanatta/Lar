@@ -46,6 +46,8 @@
 	<include file="0.0/changeset/20200517_221700_tb_email.xml" />
 	<include file="0.0/changeset/20200517_224400_tb_emailanexo.xml" />
 	<include file="0.0/changeset/20200518_000000_tb_emailboleto.xml" />
+	<include file="0.0/changeset/20200617_170300_tb_retorno.xml" />
+	<include file="0.0/changeset/20200617_194000_tb_retornoboleto.xml" />
 
 	<!-- INSERTS PROGRAMAS E PESQUISAS -->
 	<include file="0.0/inserts/20190626_113800_carga_usuario.xml" />
