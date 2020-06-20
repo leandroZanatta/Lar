@@ -33,137 +33,137 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProcessamentoBoletoMensalidade {
 
-    private MensalidadePacienteService mensalidadePacienteService = new MensalidadePacienteService();
+	private MensalidadePacienteService mensalidadePacienteService = new MensalidadePacienteService();
 
-    private ContasReceberService contasReceberService = new ContasReceberService();
+	private ContasReceberService contasReceberService = new ContasReceberService();
 
-    private BoletoService boletoService = new BoletoService();
+	private BoletoService boletoService = new BoletoService();
 
-    private EmailService emailService = new EmailService();
+	private EmailService emailService = new EmailService();
 
-    private ContasReceberBoletoService contasReceberBoletoService = new ContasReceberBoletoService();
+	private ContasReceberBoletoService contasReceberBoletoService = new ContasReceberBoletoService();
 
-    public void gerarBoleto(Date dataProcessar, ConfiguracaoMensalidadeVO configuracaoMensalidadeVO) {
+	public void gerarBoleto(Date dataProcessar, ConfiguracaoMensalidadeVO configuracaoMensalidadeVO) {
 
-        if (configuracaoMensalidadeVO.getConfiguracaoBoletoVO().isGerarboletos()) {
+		if (configuracaoMensalidadeVO.getConfiguracaoBoletoVO().isGerarboletos()) {
 
-            List<MensalidadePaciente> mensalidadesBoleto = mensalidadePacienteService.buscarMensalidadesPorBoleto();
+			List<MensalidadePaciente> mensalidadesBoleto = mensalidadePacienteService.buscarMensalidadesPorBoleto();
 
-            if (!ListUtil.isNullOrEmpty(mensalidadesBoleto)) {
+			if (!ListUtil.isNullOrEmpty(mensalidadesBoleto)) {
 
-                mensalidadesBoleto.stream().filter(paciente -> this.validarDiaGeracaoBoleto(dataProcessar, paciente))
-                        .forEach(mensalidadeDia -> this.gerarBoletoPaciente(mensalidadeDia, dataProcessar, configuracaoMensalidadeVO));
+				mensalidadesBoleto.stream().filter(paciente -> this.validarDiaGeracaoBoleto(dataProcessar, paciente))
+						.forEach(mensalidadeDia -> this.gerarBoletoPaciente(mensalidadeDia, dataProcessar, configuracaoMensalidadeVO));
 
-            }
-        }
+			}
+		}
 
-    }
+	}
 
-    private void gerarBoletoPaciente(MensalidadePaciente mensalidadeDia, Date dataProcessar, ConfiguracaoMensalidadeVO configuracaoMensalidadeVO) {
+	private void gerarBoletoPaciente(MensalidadePaciente mensalidadeDia, Date dataProcessar, ConfiguracaoMensalidadeVO configuracaoMensalidadeVO) {
 
-        Cliente cliente = getCliente(mensalidadeDia);
+		Cliente cliente = getCliente(mensalidadeDia);
 
-        List<ContasReceber> contasReceber = contasReceberService.buscarContasReceberPacienteTipoBoleto(cliente.getIdCliente(),
-                mensalidadeDia.isAgruparContas());
+		List<ContasReceber> contasReceber = contasReceberService.buscarContasReceberPacienteTipoBoleto(cliente.getIdCliente(),
+				mensalidadeDia.isAgruparContas());
 
-        Map<Date, List<ContasReceber>> mapaContasReceber = contasReceber.stream().collect(Collectors.groupingBy(ContasReceber::getDataVencimento));
+		Map<Date, List<ContasReceber>> mapaContasReceber = contasReceber.stream().collect(Collectors.groupingBy(ContasReceber::getDataVencimento));
 
-        for (Entry<Date, List<ContasReceber>> entry : mapaContasReceber.entrySet()) {
+		for (Entry<Date, List<ContasReceber>> entry : mapaContasReceber.entrySet()) {
 
-            if (DateUtil.menorOuIgual(entry.getKey(), dataProcessar)) {
+			if (DateUtil.menorOuIgual(entry.getKey(), dataProcessar)) {
 
-                log.warn(String.format(
-                        "Não é possivel gerar boletos com menos de um dia para vencimento, por favor verifique os códigos de contas a receber %s para a data %s",
-                        entry.getValue().stream().mapToLong(ContasReceber::getIdContasReceber).boxed().collect(Collectors.toList()),
-                        DateUtil.format(DateUtil.FORMATO_DD_MM_YYY, entry.getKey())));
+				log.warn(String.format(
+						"Não é possivel gerar boletos com menos de um dia para vencimento, por favor verifique os códigos de contas a receber %s para a data %s",
+						entry.getValue().stream().mapToLong(ContasReceber::getIdContasReceber).boxed().collect(Collectors.toList()),
+						DateUtil.format(DateUtil.FORMATO_DD_MM_YYY, entry.getKey())));
 
-                continue;
-            }
+				continue;
+			}
 
-            BigDecimal valorMensalidade = entry.getValue().stream().map(ContasReceber::getValorParcela).reduce(BigDecimal.ZERO, BigDecimal::add);
+			BigDecimal valorMensalidade = entry.getValue().stream().map(ContasReceber::getValorParcela).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            ContasReceber contaReceberMensalidade = entry.getValue().stream()
-                    .filter(contaReceber -> contaReceber.getPrograma().equals(TipoProgramaContasReceberEnum.MENSALIDADE.getCodigo())).findFirst()
-                    .orElse(entry.getValue().get(0));
+			ContasReceber contaReceberMensalidade = entry.getValue().stream()
+					.filter(contaReceber -> contaReceber.getPrograma().equals(TipoProgramaContasReceberEnum.MENSALIDADE.getCodigo())).findFirst()
+					.orElse(entry.getValue().get(0));
 
-            PagamentoBoletoVO pagamentoBoletoVO = new PagamentoBoletoVO(contaReceberMensalidade.getIdContasReceber(), valorMensalidade,
-                    entry.getKey());
+			PagamentoBoletoVO pagamentoBoletoVO = new PagamentoBoletoVO(contaReceberMensalidade.getIdContasReceber(), valorMensalidade,
+					entry.getKey());
 
-            Boleto boleto = boletoService.gerarBoletoSemAceite(montarClienteBoleto(cliente), montarSacadorAvalista(mensalidadeDia), pagamentoBoletoVO,
-                    mensalidadeDia.getFormasPagamento().getBanco(), TipoTituloEnum.DS_DUPLICATA_DE_SERVICO);
+			Boleto boleto = boletoService.gerarBoletoSemAceite(montarClienteBoleto(cliente), montarSacadorAvalista(mensalidadeDia), pagamentoBoletoVO,
+					mensalidadeDia.getFormasPagamento().getBanco(), TipoTituloEnum.DS_DUPLICATA_DE_SERVICO);
 
-            if (configuracaoMensalidadeVO.getConfiguracaoBoletoVO().isEnviarEmail()) {
+			if (configuracaoMensalidadeVO.getConfiguracaoBoletoVO().isEnviarEmail()) {
 
-                emailService.gerarEmailBoleto(mensalidadeDia.getPaciente(), entry.getValue(), boleto);
-            }
+				emailService.gerarEmailBoleto(mensalidadeDia.getPaciente(), entry.getValue(), boleto);
+			}
 
-            this.salvarBoletoContasReceber(entry.getValue(), boleto);
+			this.salvarBoletoContasReceber(entry.getValue(), boleto);
 
-        }
+		}
 
-    }
+	}
 
-    private void salvarBoletoContasReceber(List<ContasReceber> contasRecebers, Boleto boleto) {
+	private void salvarBoletoContasReceber(List<ContasReceber> contasRecebers, Boleto boleto) {
 
-        List<ContasReceberBoleto> contasReceberBoletos = new ArrayList<>();
+		List<ContasReceberBoleto> contasReceberBoletos = new ArrayList<>();
 
-        contasRecebers.forEach(conta -> {
+		contasRecebers.forEach(conta -> {
 
-            ContasReceberBoleto contasReceberBoleto = new ContasReceberBoleto();
-            contasReceberBoleto.setId(new ContasReceberBoletoPk(boleto.getIdBoleto(), conta.getIdContasReceber()));
+			ContasReceberBoleto contasReceberBoleto = new ContasReceberBoleto();
+			contasReceberBoleto.setId(new ContasReceberBoletoPk(boleto.getIdBoleto(), conta.getIdContasReceber()));
 
-            contasReceberBoletos.add(contasReceberBoleto);
-        });
+			contasReceberBoletos.add(contasReceberBoleto);
+		});
 
-        contasReceberBoletoService.salvar(contasReceberBoletos);
-    }
+		contasReceberBoletoService.salvar(contasReceberBoletos);
+	}
 
-    private boolean validarDiaGeracaoBoleto(Date dataProcessar, MensalidadePaciente paciente) {
+	private boolean validarDiaGeracaoBoleto(Date dataProcessar, MensalidadePaciente paciente) {
 
-        FormaPagamentoEnum formaPagamentoEnum = FormaPagamentoEnum.forCodigo(paciente.getFormasPagamento().getCodigoFormaPagamento());
+		FormaPagamentoEnum formaPagamentoEnum = FormaPagamentoEnum.forCodigo(paciente.getFormasPagamento().getCodigoFormaPagamento());
 
-        return formaPagamentoEnum.equals(FormaPagamentoEnum.BOLETO)
-                && DateUtil.getDayOfMonth(DateUtil.addDays(dataProcessar, paciente.getDiasAntecedencia())) == paciente.getDiaVencimento().intValue();
-    }
+		return formaPagamentoEnum.equals(FormaPagamentoEnum.BOLETO)
+				&& DateUtil.getDayOfMonth(DateUtil.addDays(dataProcessar, paciente.getDiasAntecedencia())) == paciente.getDiaVencimento().intValue();
+	}
 
-    private BoletoDadosCliente montarClienteBoleto(Cliente cliente) {
+	private BoletoDadosCliente montarClienteBoleto(Cliente cliente) {
 
-        BoletoDadosCliente clienteBoletoVO = new BoletoDadosCliente();
-        clienteBoletoVO.setCgc(cliente.getCgc());
-        clienteBoletoVO.setFlagTipoCliente(cliente.getFlagTipoCliente());
-        clienteBoletoVO.setNome(cliente.getNome());
-        clienteBoletoVO.setCidade(cliente.getCidade().getDescricao());
-        clienteBoletoVO.setUF(cliente.getCidade().getEstado().getUf());
-        clienteBoletoVO.setEndereco(cliente.getEndereco());
-        clienteBoletoVO.setNumero(cliente.getNumero());
-        clienteBoletoVO.setBairro(cliente.getBairro());
-        clienteBoletoVO.setCep(cliente.getCep());
+		BoletoDadosCliente clienteBoletoVO = new BoletoDadosCliente();
+		clienteBoletoVO.setCgc(cliente.getCgc());
+		clienteBoletoVO.setFlagTipoCliente(cliente.getFlagTipoCliente());
+		clienteBoletoVO.setNome(cliente.getNome());
+		clienteBoletoVO.setCidade(cliente.getCidade().getDescricao());
+		clienteBoletoVO.setUf(cliente.getCidade().getEstado().getUf());
+		clienteBoletoVO.setEndereco(cliente.getEndereco());
+		clienteBoletoVO.setNumero(cliente.getNumero());
+		clienteBoletoVO.setBairro(cliente.getBairro());
+		clienteBoletoVO.setCep(cliente.getCep());
 
-        return clienteBoletoVO;
-    }
+		return clienteBoletoVO;
+	}
 
-    private BoletoDadosSacadorAvalista montarSacadorAvalista(MensalidadePaciente mensalidade) {
+	private BoletoDadosSacadorAvalista montarSacadorAvalista(MensalidadePaciente mensalidade) {
 
-        if (mensalidade.getPaciente().getResponsavel() != null) {
-            Cliente paciente = mensalidade.getPaciente().getCliente();
+		if (mensalidade.getPaciente().getResponsavel() != null) {
+			Cliente paciente = mensalidade.getPaciente().getCliente();
 
-            BoletoDadosSacadorAvalista boletoDadosSacadorAvalista = new BoletoDadosSacadorAvalista();
-            boletoDadosSacadorAvalista.setCgc(paciente.getCgc());
-            boletoDadosSacadorAvalista.setFlagTipoCliente(paciente.getFlagTipoCliente());
-            boletoDadosSacadorAvalista.setNome(paciente.getNome());
+			BoletoDadosSacadorAvalista boletoDadosSacadorAvalista = new BoletoDadosSacadorAvalista();
+			boletoDadosSacadorAvalista.setCgc(paciente.getCgc());
+			boletoDadosSacadorAvalista.setFlagTipoCliente(paciente.getFlagTipoCliente());
+			boletoDadosSacadorAvalista.setNome(paciente.getNome());
 
-            return boletoDadosSacadorAvalista;
-        }
+			return boletoDadosSacadorAvalista;
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    private Cliente getCliente(MensalidadePaciente mensalidadeDia) {
+	private Cliente getCliente(MensalidadePaciente mensalidadeDia) {
 
-        if (mensalidadeDia.getPaciente().getResponsavel() != null) {
-            return mensalidadeDia.getPaciente().getResponsavel();
-        }
+		if (mensalidadeDia.getPaciente().getResponsavel() != null) {
+			return mensalidadeDia.getPaciente().getResponsavel();
+		}
 
-        return mensalidadeDia.getPaciente().getCliente();
-    }
+		return mensalidadeDia.getPaciente().getCliente();
+	}
 }

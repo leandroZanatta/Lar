@@ -21,97 +21,96 @@ import br.com.lar.repository.model.MensalidadePaciente;
 import br.com.lar.repository.model.Paciente;
 import br.com.lar.service.contasreceber.ContasReceberService;
 import br.com.sysdesc.util.classes.DateUtil;
-import br.com.sysdesc.util.vo.ConfiguracaoMensalidadeVO;
 import br.com.sysdesc.util.vo.ValoresContasReceberVO;
 
 public class ProcessamentoMensalidadePaciente {
 
-    public final static String PROGRAMA_MENSALIDADE = "MENS";
+	public static final String PROGRAMA_MENSALIDADE = "MENS";
 
-    private ContasReceberService contasReceberService = new ContasReceberService();
+	private ContasReceberService contasReceberService = new ContasReceberService();
 
-    private CobrancaMensalidadeDAO cobrancaMensalidadeDAO = new CobrancaMensalidadeDAO();
+	private CobrancaMensalidadeDAO cobrancaMensalidadeDAO = new CobrancaMensalidadeDAO();
 
-    public void gerarMensalidade(ConfiguracaoMensalidadeVO configuracaoMensalidadeVO, Date dataVencimento, MensalidadePaciente mensalidade) {
+	public void gerarMensalidade(Date dataVencimento, MensalidadePaciente mensalidade) {
 
-        if (!isMensalidadePaga(mensalidade, dataVencimento)) {
+		if (!isMensalidadePaga(mensalidade, dataVencimento)) {
 
-            cobrarMensalidade(configuracaoMensalidadeVO, dataVencimento, mensalidade);
-        }
-    }
+			cobrarMensalidade(dataVencimento, mensalidade);
+		}
+	}
 
-    private boolean isMensalidadePaga(MensalidadePaciente mensalidade, Date dataVencimento) {
+	private boolean isMensalidadePaga(MensalidadePaciente mensalidade, Date dataVencimento) {
 
-        return DateUtil.format(DateUtil.FORMATO_MM_YYYYY, dataVencimento)
-                .equals(DateUtil.format(DateUtil.FORMATO_MM_YYYYY, mensalidade.getPaciente().getDataAdmissao()));
-    }
+		return DateUtil.format(DateUtil.FORMATO_MM_YYYYY, dataVencimento)
+				.equals(DateUtil.format(DateUtil.FORMATO_MM_YYYYY, mensalidade.getPaciente().getDataAdmissao()));
+	}
 
-    private void cobrarMensalidade(ConfiguracaoMensalidadeVO configuracaoMensalidadeVO, Date dataVencimento, MensalidadePaciente mensalidade) {
+	private void cobrarMensalidade(Date dataVencimento, MensalidadePaciente mensalidade) {
 
-        Date dataReferencia = DateUtil.addMonth(dataVencimento, -1L);
+		Date dataReferencia = DateUtil.addMonth(dataVencimento, -1L);
 
-        Cliente cliente = obterClienteCobranca(mensalidade);
+		Cliente cliente = obterClienteCobranca(mensalidade);
 
-        String dataMensalidade = format(FORMATO_MM_YYYYY, dataReferencia);
+		String dataMensalidade = format(FORMATO_MM_YYYYY, dataReferencia);
 
-        CobrancaMensalidade cobrancaMensalidade = cobrancaMensalidadeDAO.buscarCobrancaPeriodo(cliente.getIdCliente(), dataMensalidade);
+		CobrancaMensalidade cobrancaMensalidade = cobrancaMensalidadeDAO.buscarCobrancaPeriodo(cliente.getIdCliente(), dataMensalidade);
 
-        if (cobrancaMensalidade == null) {
+		if (cobrancaMensalidade == null) {
 
-            BigDecimal valorMensalidade = calcularValorMensalidade(dataReferencia, mensalidade);
+			BigDecimal valorMensalidade = calcularValorMensalidade(dataReferencia, mensalidade);
 
-            Date diaUtil = obterDiaUtil(dataVencimento);
+			Date diaUtil = obterDiaUtil(dataVencimento);
 
-            ValoresContasReceberVO valores = new ValoresContasReceberVO(valorMensalidade);
+			ValoresContasReceberVO valores = new ValoresContasReceberVO(valorMensalidade);
 
-            ContasReceber contasReceber = contasReceberService.criarContasReceber(cliente, mensalidade.getFormasPagamento(), diaUtil, valores,
-                    PROGRAMA_MENSALIDADE);
+			ContasReceber contasReceber = contasReceberService.criarContasReceber(cliente, mensalidade.getFormasPagamento(), diaUtil, valores,
+					PROGRAMA_MENSALIDADE);
 
-            Date dataCadastro = new Date();
+			Date dataCadastro = new Date();
 
-            cobrancaMensalidade = new CobrancaMensalidade();
-            cobrancaMensalidade.setCliente(cliente);
-            cobrancaMensalidade.setContasReceber(contasReceber);
-            cobrancaMensalidade.setReferencia(dataMensalidade);
-            cobrancaMensalidade.setValorMensalidade(valorMensalidade);
-            cobrancaMensalidade.setDataCadastro(dataCadastro);
-            cobrancaMensalidade.setDataManutencao(dataCadastro);
+			cobrancaMensalidade = new CobrancaMensalidade();
+			cobrancaMensalidade.setCliente(cliente);
+			cobrancaMensalidade.setContasReceber(contasReceber);
+			cobrancaMensalidade.setReferencia(dataMensalidade);
+			cobrancaMensalidade.setValorMensalidade(valorMensalidade);
+			cobrancaMensalidade.setDataCadastro(dataCadastro);
+			cobrancaMensalidade.setDataManutencao(dataCadastro);
 
-            cobrancaMensalidadeDAO.salvar(cobrancaMensalidade);
+			cobrancaMensalidadeDAO.salvar(cobrancaMensalidade);
 
-        }
-    }
+		}
+	}
 
-    private Cliente obterClienteCobranca(MensalidadePaciente mensalidade) {
+	private Cliente obterClienteCobranca(MensalidadePaciente mensalidade) {
 
-        Paciente paciente = mensalidade.getPaciente();
+		Paciente paciente = mensalidade.getPaciente();
 
-        return paciente.getResponsavel() == null ? paciente.getCliente() : paciente.getResponsavel();
-    }
+		return paciente.getResponsavel() == null ? paciente.getCliente() : paciente.getResponsavel();
+	}
 
-    private BigDecimal calcularValorMensalidade(Date dataReferencia, MensalidadePaciente mensalidade) {
+	private BigDecimal calcularValorMensalidade(Date dataReferencia, MensalidadePaciente mensalidade) {
 
-        Date dataAdmissao = mensalidade.getPaciente().getDataAdmissao();
+		Date dataAdmissao = mensalidade.getPaciente().getDataAdmissao();
 
-        if (menorOuIgual(DateUtil.setDay(dataReferencia, 1L), dataAdmissao)) {
+		if (menorOuIgual(DateUtil.setDay(dataReferencia, 1L), dataAdmissao)) {
 
-            return this.calcularValorMensalidadeProporcionalDiaVencimento(dataAdmissao, mensalidade.getValorMensalidade());
-        }
+			return this.calcularValorMensalidadeProporcionalDiaVencimento(dataAdmissao, mensalidade.getValorMensalidade());
+		}
 
-        return mensalidade.getValorMensalidade();
-    }
+		return mensalidade.getValorMensalidade();
+	}
 
-    private BigDecimal calcularValorMensalidadeProporcionalDiaVencimento(Date dataAdmissao, BigDecimal valorMensalidade) {
+	private BigDecimal calcularValorMensalidadeProporcionalDiaVencimento(Date dataAdmissao, BigDecimal valorMensalidade) {
 
-        Integer ultimoDiaMes = getLastDayOfMonth(dataAdmissao);
-        Date datUltimoDiaMes = setDay(dataAdmissao, ultimoDiaMes.longValue());
+		Integer ultimoDiaMes = getLastDayOfMonth(dataAdmissao);
+		Date datUltimoDiaMes = setDay(dataAdmissao, ultimoDiaMes.longValue());
 
-        BigDecimal diasMes = BigDecimal.valueOf(ultimoDiaMes);
-        BigDecimal diasAteFinalMes = BigDecimal.valueOf(getDaysOfDates(dataAdmissao, datUltimoDiaMes) + 1L);
+		BigDecimal diasMes = BigDecimal.valueOf(ultimoDiaMes);
+		BigDecimal diasAteFinalMes = BigDecimal.valueOf(getDaysOfDates(dataAdmissao, datUltimoDiaMes) + 1L);
 
-        return valorMensalidade.divide(diasMes, 12, RoundingMode.HALF_EVEN).multiply(diasAteFinalMes, MathContext.DECIMAL64).setScale(2,
-                RoundingMode.HALF_EVEN);
+		return valorMensalidade.divide(diasMes, 12, RoundingMode.HALF_EVEN).multiply(diasAteFinalMes, MathContext.DECIMAL64).setScale(2,
+				RoundingMode.HALF_EVEN);
 
-    }
+	}
 
 }

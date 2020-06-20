@@ -5,15 +5,15 @@ import static br.com.sysdesc.util.resources.Resources.translate;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.FileUtils;
 
 import com.google.gson.Gson;
 
 import br.com.lar.atualizacao.ui.FrmDownloader;
+import br.com.sysdesc.util.exception.SysDescException;
 import br.com.sysdesc.util.resources.Configuracoes;
 import br.com.sysdesc.util.vo.VersaoERPVO;
 import liquibase.util.file.FilenameUtils;
@@ -22,74 +22,75 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class VersaoInternet {
 
-    private static final String URL_ARQUIVO_VERSOES = translate(APPLICATION_VERSOES);
+	private static final String URL_ARQUIVO_VERSOES = translate(APPLICATION_VERSOES);
 
-    public File obterArquivoVersaoZip(VersaoERPVO versaoVO) throws IOException, MalformedURLException {
-        log.info("Buscando arquivo de configurações");
+	public File obterArquivoVersaoZip(VersaoERPVO versaoVO) throws IOException {
+		log.info("Buscando arquivo de configurações");
 
-        File arquivoVersaoZip = new File(Configuracoes.FOLDER_VERSOES, FilenameUtils.getName(new URL(versaoVO.getArquivoERP()).getPath()));
+		File arquivoVersaoZip = new File(Configuracoes.FOLDER_VERSOES, FilenameUtils.getName(new URL(versaoVO.getArquivoERP()).getPath()));
 
-        if (!arquivoVersaoZip.exists()) {
-            log.info("Arquivo de configuração não encontrado localmente");
+		if (!arquivoVersaoZip.exists()) {
+			log.info("Arquivo de configuração não encontrado localmente");
 
-            createFloders(arquivoVersaoZip);
+			createFloders(arquivoVersaoZip);
 
-            baixarVersaoZipInternet(arquivoVersaoZip, versaoVO.getArquivoERP());
-        }
+			baixarVersaoZipInternet(arquivoVersaoZip, versaoVO.getArquivoERP());
+		}
 
-        return arquivoVersaoZip;
-    }
+		return arquivoVersaoZip;
+	}
 
-    private void createFloders(File arquivoVersaoZip) throws IOException {
-        new File(arquivoVersaoZip.getParent()).mkdirs();
-    }
+	private void createFloders(File arquivoVersaoZip) {
 
-    public VersaoERPVO obterVersaoVO(File arquivoVersao) throws Exception {
+		new File(arquivoVersaoZip.getParent()).mkdirs();
+	}
 
-        if (!arquivoVersao.exists()) {
-            log.info("Arquivo de versão inexistente - Criando arquivos");
+	public VersaoERPVO obterVersaoVO(File arquivoVersao) throws IOException {
 
-            createFloders(arquivoVersao);
+		if (!arquivoVersao.exists()) {
+			log.info("Arquivo de versão inexistente - Criando arquivos");
 
-            buscarArquivoVersaoInternet(arquivoVersao);
-        }
+			createFloders(arquivoVersao);
 
-        log.info("Carregando arquivo" + arquivoVersao);
+			buscarArquivoVersaoInternet(arquivoVersao);
+		}
 
-        return obterVersaoVOArquivo(arquivoVersao);
-    }
+		log.info("Carregando arquivo" + arquivoVersao);
 
-    private VersaoERPVO obterVersaoVOArquivo(File arquivoVersao) throws IOException {
+		return obterVersaoVOArquivo(arquivoVersao);
+	}
 
-        return new Gson().fromJson(FileUtils.readFileToString(arquivoVersao, Charset.forName("UTF-8")), VersaoERPVO.class);
-    }
+	private VersaoERPVO obterVersaoVOArquivo(File arquivoVersao) throws IOException {
 
-    private void baixarVersaoZipInternet(File arquivoVersaoZip, String arquivo) {
-        log.info("Baixando Versão da internet");
+		return new Gson().fromJson(FileUtils.readFileToString(arquivoVersao, StandardCharsets.UTF_8), VersaoERPVO.class);
+	}
 
-        FrmDownloader frmDownloader = new FrmDownloader(arquivo, arquivoVersaoZip);
+	private void baixarVersaoZipInternet(File arquivoVersaoZip, String arquivo) {
+		log.info("Baixando Versão da internet");
 
-        frmDownloader.setVisible(Boolean.TRUE);
+		FrmDownloader frmDownloader = new FrmDownloader(arquivo, arquivoVersaoZip);
 
-        if (!frmDownloader.isSucesso()) {
+		frmDownloader.setVisible(Boolean.TRUE);
 
-            throw new RuntimeException("Não foi possivel fazer download da versão.");
-        }
+		if (!frmDownloader.isSucesso()) {
 
-        log.info("Arquivo de versão baixado com sucesso");
-    }
+			throw new SysDescException("Não foi possivel fazer download da versão.");
+		}
 
-    private void buscarArquivoVersaoInternet(File arquivoVersao) throws Exception {
+		log.info("Arquivo de versão baixado com sucesso");
+	}
 
-        FrmDownloader frmDownloader = new FrmDownloader(URL_ARQUIVO_VERSOES, arquivoVersao);
+	private void buscarArquivoVersaoInternet(File arquivoVersao) {
 
-        frmDownloader.setVisible(Boolean.TRUE);
+		FrmDownloader frmDownloader = new FrmDownloader(URL_ARQUIVO_VERSOES, arquivoVersao);
 
-        if (!frmDownloader.isSucesso()) {
+		frmDownloader.setVisible(Boolean.TRUE);
 
-            throw new RuntimeException("Não foi possivel fazer download do arquivo de versões.");
-        }
+		if (!frmDownloader.isSucesso()) {
 
-    }
+			throw new SysDescException("Não foi possivel fazer download do arquivo de versões.");
+		}
+
+	}
 
 }

@@ -102,9 +102,4 @@ public class BoletoRetornoTableModel extends AbstractInternalFrameTable {
 		fireTableDataChanged();
 	}
 
-	@Override
-	public void setEnabled(Boolean enabled) {
-
-	}
-
 }

@@ -34,7 +34,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import br.com.lar.repository.dao.MensalidadePacienteDAO;
 import br.com.lar.repository.model.MensalidadePaciente;
 import br.com.sysdesc.util.classes.DateUtil;
-import br.com.sysdesc.util.vo.ConfiguracaoMensalidadeVO;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessamentoMensalidadeBaseVencimentoTest {
@@ -65,7 +64,7 @@ public class ProcessamentoMensalidadeBaseVencimentoTest {
 			dataInicial = addDays(dataInicial, 1L);
 		}
 
-		verify(processamentoMensalidadePaciente, times(0)).gerarMensalidade(any(ConfiguracaoMensalidadeVO.class),
+		verify(processamentoMensalidadePaciente, times(0)).gerarMensalidade(
 				any(Date.class), any(MensalidadePaciente.class));
 	}
 
@@ -93,9 +92,9 @@ public class ProcessamentoMensalidadeBaseVencimentoTest {
 
 		ArgumentCaptor<Date> dataGeracao = ArgumentCaptor.forClass(Date.class);
 
-		verify(processamentoMensalidadePaciente, times(12)).gerarMensalidade(any(ConfiguracaoMensalidadeVO.class),
+		verify(processamentoMensalidadePaciente, times(12)).gerarMensalidade(
 				dataGeracao.capture(), any(MensalidadePaciente.class));
-		assertEquals(dataGeracao.getAllValues().size(), 12);
+		assertEquals(12, dataGeracao.getAllValues().size());
 
 		List<String> datas = dataGeracao.getAllValues().stream().map(data -> format(FORMATO_DD_MM_YYY, data))
 				.collect(Collectors.toList());
@@ -123,7 +122,7 @@ public class ProcessamentoMensalidadeBaseVencimentoTest {
 
 		datas.forEach(data -> processamentoMensalidadePrimeiroDia.processar(data));
 
-		verify(processamentoMensalidadePaciente, times(12)).gerarMensalidade(any(ConfiguracaoMensalidadeVO.class),
+		verify(processamentoMensalidadePaciente, times(12)).gerarMensalidade(
 				any(Date.class), any(MensalidadePaciente.class));
 	}
 

@@ -12,6 +12,7 @@ import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.invoker.Invoker;
+import org.apache.maven.shared.invoker.MavenInvocationException;
 
 import br.com.lar.upgrade.util.classes.ProcessUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class VersaoService {
 		return stringBuilder.toString();
 	}
 
-	public void changeMavenVersion(File pathDir, String novaVersao) throws Exception {
+	public void changeMavenVersion(File pathDir, String novaVersao) throws ExecutionException, MavenInvocationException {
 
 		InvocationRequest request = new DefaultInvocationRequest();
 		Invoker invoker = new DefaultInvoker();

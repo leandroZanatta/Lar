@@ -13,6 +13,9 @@ import liquibase.resource.FileSystemResourceAccessor;
 
 public class Changelog {
 
+	private Changelog() {
+	}
+
 	public static void runChangelog(Connection connection, String path, String file) {
 
 		Database database;

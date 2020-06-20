@@ -14,42 +14,42 @@ import br.com.sysdesc.util.vo.ConfiguracaoMensalidadeVO;
 
 public class ProcessamentoMensalidadeDiaFixo implements ProcessamentoMensalidade {
 
-    private MensalidadePacienteDAO mensalidadePacienteDAO = new MensalidadePacienteDAO();
+	private MensalidadePacienteDAO mensalidadePacienteDAO = new MensalidadePacienteDAO();
 
-    private ProcessamentoMensalidadePaciente processamentoMensalidadePaciente = new ProcessamentoMensalidadePaciente();
+	private ProcessamentoMensalidadePaciente processamentoMensalidadePaciente = new ProcessamentoMensalidadePaciente();
 
-    private ConfiguracaoMensalidadeVO configuracaoMensalidadeVO;
+	private ConfiguracaoMensalidadeVO configuracaoMensalidadeVO;
 
-    public ProcessamentoMensalidadeDiaFixo(ConfiguracaoMensalidadeVO configuracaoMensalidadeVO) {
-        this.configuracaoMensalidadeVO = configuracaoMensalidadeVO;
-    }
+	public ProcessamentoMensalidadeDiaFixo(ConfiguracaoMensalidadeVO configuracaoMensalidadeVO) {
+		this.configuracaoMensalidadeVO = configuracaoMensalidadeVO;
+	}
 
-    public void processar(Date dataProcessar) {
+	public void processar(Date dataProcessar) {
 
-        if (DateUtil.isDayOrLastDayOfMonth(dataProcessar, configuracaoMensalidadeVO.getConfiguracaoContasReceber().getDiasGeracao())) {
+		if (DateUtil.isDayOrLastDayOfMonth(dataProcessar, configuracaoMensalidadeVO.getConfiguracaoContasReceber().getDiasGeracao())) {
 
-            List<MensalidadePaciente> mensalidadePacientes = mensalidadePacienteDAO.listar();
+			List<MensalidadePaciente> mensalidadePacientes = mensalidadePacienteDAO.listar();
 
-            Map<Date, List<MensalidadePaciente>> mapaMensalidades = mensalidadePacientes.stream()
-                    .collect(Collectors.groupingBy(mensalidade -> dataMensalidade(dataProcessar, mensalidade)));
+			Map<Date, List<MensalidadePaciente>> mapaMensalidades = mensalidadePacientes.stream()
+					.collect(Collectors.groupingBy(mensalidade -> dataMensalidade(dataProcessar, mensalidade)));
 
-            if (!mapaMensalidades.isEmpty()) {
+			if (!mapaMensalidades.isEmpty()) {
 
-                for (Entry<Date, List<MensalidadePaciente>> entry : mapaMensalidades.entrySet()) {
+				for (Entry<Date, List<MensalidadePaciente>> entry : mapaMensalidades.entrySet()) {
 
-                    entry.getValue().forEach(
-                            mensalidade -> processamentoMensalidadePaciente.gerarMensalidade(configuracaoMensalidadeVO, entry.getKey(), mensalidade));
-                }
-            }
-        }
-    }
+					entry.getValue().forEach(
+							mensalidade -> processamentoMensalidadePaciente.gerarMensalidade(entry.getKey(), mensalidade));
+				}
+			}
+		}
+	}
 
-    private Date dataMensalidade(Date dataProcessar, MensalidadePaciente mensalidade) {
+	private Date dataMensalidade(Date dataProcessar, MensalidadePaciente mensalidade) {
 
-        Long ultimoDiaMes = DateUtil.getLastDayOfMonth(dataProcessar).longValue();
-        Long diaVencimento = ultimoDiaMes < mensalidade.getDiaVencimento() ? ultimoDiaMes : mensalidade.getDiaVencimento();
+		Long ultimoDiaMes = DateUtil.getLastDayOfMonth(dataProcessar).longValue();
+		Long diaVencimento = ultimoDiaMes < mensalidade.getDiaVencimento() ? ultimoDiaMes : mensalidade.getDiaVencimento();
 
-        return DateUtil.setDay(dataProcessar, diaVencimento);
+		return DateUtil.setDay(dataProcessar, diaVencimento);
 
-    }
+	}
 }

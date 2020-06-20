@@ -1,7 +1,6 @@
 package br.com.lar.atualizacao.changelog.core;
 
 import static br.com.sysdesc.util.constants.MensagemConstants.MENSAGEM_CONFIGURACOES_INVALIDAS;
-import static br.com.sysdesc.util.constants.MensagemConstants.MENSAGEM_ERRO_BUSCAR_PROPRIEDADES_CONEXAO;
 import static br.com.sysdesc.util.resources.Resources.translate;
 import static java.sql.DriverManager.getConnection;
 
@@ -10,9 +9,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.naming.ConfigurationException;
 
@@ -20,13 +18,18 @@ import org.apache.commons.io.FileUtils;
 
 import br.com.lar.atualizacao.enumeradores.TipoConexaoEnum;
 import br.com.sysdesc.util.classes.CryptoUtil;
+import br.com.sysdesc.util.exception.SysDescException;
 import br.com.sysdesc.util.resources.Configuracoes;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Conexao {
 
-	private static final Logger log = Logger.getLogger(Conexao.class.getName());
+	private Conexao() {
+	}
 
-	private static Boolean isconfigured() {
+	private static boolean isconfigured() {
+
 		return new File(Configuracoes.CONEXAO).exists();
 	}
 
@@ -40,43 +43,45 @@ public class Conexao {
 		return new File(Configuracoes.CONEXAO);
 	}
 
-	public static Connection buscarConexao() throws Exception {
-
-		Properties propertiesConexao = buscarPropertiesConexao();
-
-		String clazz = propertiesConexao.getProperty(TipoConexaoEnum.jdbcDriver);
-		String url = propertiesConexao.getProperty(TipoConexaoEnum.jdbcUrl);
-		String usuario = propertiesConexao.getProperty(TipoConexaoEnum.jdbcUser);
-		String senha = propertiesConexao.getProperty(TipoConexaoEnum.jdbcPassword);
-
-		Class.forName(clazz);
-
-		return getConnection(url, usuario, senha);
-
-	}
-
-	private static Properties buscarPropertiesConexao() throws ConfigurationException {
+	public static Connection buscarConexao() {
 
 		try {
-			String arquivoConfiguracao = CryptoUtil
-					.fromBlowfish(FileUtils.readFileToString(getConfiguracaoBanco(), StandardCharsets.UTF_8));
 
-			if (arquivoConfiguracao == null) {
-				throw new ConfigurationException(translate(MENSAGEM_CONFIGURACOES_INVALIDAS));
-			}
+			Properties propertiesConexao = buscarPropertiesConexao();
 
-			Properties properties = new Properties();
+			String clazz = propertiesConexao.getProperty(TipoConexaoEnum.JDBCDRIVER);
+			String url = propertiesConexao.getProperty(TipoConexaoEnum.JDBCURL);
+			String usuario = propertiesConexao.getProperty(TipoConexaoEnum.JDBCUSER);
+			String senha = propertiesConexao.getProperty(TipoConexaoEnum.JDBCPASSWORD);
 
-			properties.load(new StringReader(arquivoConfiguracao));
+			Class.forName(clazz);
 
-			return properties;
+			return getConnection(url, usuario, senha);
 
+		} catch (SQLException | ConfigurationException e) {
+			throw new SysDescException("Não foi possive conectar ao banco de dados selecionado", e);
+		} catch (ClassNotFoundException e) {
+			throw new SysDescException("Driver do banco de dados não foi encontrado", e);
 		} catch (IOException e) {
-
-			log.log(Level.SEVERE, translate(MENSAGEM_ERRO_BUSCAR_PROPRIEDADES_CONEXAO), e);
-
-			return null;
+			throw new SysDescException("Não foi possivel encontrar o arquivo de configuração do banco de dados", e);
 		}
+	}
+
+	private static Properties buscarPropertiesConexao() throws ConfigurationException, IOException {
+
+		Properties properties = new Properties();
+
+		String arquivoConfiguracao = CryptoUtil
+				.fromBlowfish(FileUtils.readFileToString(getConfiguracaoBanco(), StandardCharsets.UTF_8));
+
+		if (arquivoConfiguracao == null) {
+			throw new ConfigurationException(translate(MENSAGEM_CONFIGURACOES_INVALIDAS));
+		}
+
+		properties.load(new StringReader(arquivoConfiguracao));
+
+		return properties;
+
 	}
 
 }

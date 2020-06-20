@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -14,49 +15,50 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ExtratorZip {
 
-    public void extrairVersao(File arquivoVersaoZIP) throws Exception {
+	public void extrairVersao(File arquivoVersaoZIP) throws IOException {
 
-        BufferedOutputStream dest = null;
+		try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(arquivoVersaoZIP)))) {
 
-        try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(arquivoVersaoZIP)))) {
+			extrairArquivo(zis);
+		}
 
-            ZipEntry entry;
+	}
 
-            while ((entry = zis.getNextEntry()) != null) {
+	private void extrairArquivo(ZipInputStream zis) throws IOException {
 
-                log.info("Extraindo: " + entry.getName());
+		ZipEntry entry;
 
-                if (entry.isDirectory()) {
+		while ((entry = zis.getNextEntry()) != null) {
 
-                    new File(Configuracoes.USER_DIR + File.separator + entry.getName()).mkdirs();
+			log.info("Extraindo: " + entry.getName());
 
-                    continue;
-                } else {
+			if (entry.isDirectory()) {
 
-                    int di = entry.getName().lastIndexOf('/');
+				new File(Configuracoes.USER_DIR + File.separator + entry.getName()).mkdirs();
 
-                    if (di != -1) {
-                        new File(Configuracoes.USER_DIR + File.separator + entry.getName().substring(0, di)).mkdirs();
-                    }
-                }
+				continue;
+			} else {
 
-                int count;
+				int di = entry.getName().lastIndexOf('/');
 
-                byte data[] = new byte[1024];
+				if (di != -1) {
+					new File(Configuracoes.USER_DIR + File.separator + entry.getName().substring(0, di)).mkdirs();
+				}
+			}
 
-                FileOutputStream fos = new FileOutputStream(Configuracoes.USER_DIR + File.separator + entry.getName());
+			int count;
 
-                dest = new BufferedOutputStream(fos);
+			byte[] data = new byte[1024];
 
-                while ((count = zis.read(data)) != -1)
-                    dest.write(data, 0, count);
+			try (FileOutputStream fos = new FileOutputStream(Configuracoes.USER_DIR + File.separator + entry.getName());
+					BufferedOutputStream dest = new BufferedOutputStream(fos)) {
 
-                dest.flush();
+				while ((count = zis.read(data)) != -1) {
+					dest.write(data, 0, count);
+				}
 
-                dest.close();
-            }
-        }
-
-    }
+			}
+		}
+	}
 
 }

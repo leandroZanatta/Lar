@@ -45,7 +45,7 @@ public class ProcessamentoMensalidadeBaseVencimento implements ProcessamentoMens
 			for (Entry<Date, List<MensalidadePaciente>> entry : mapaMensalidades.entrySet()) {
 
 				entry.getValue().forEach(mensalidade -> processamentoMensalidadePaciente
-						.gerarMensalidade(configuracaoMensalidadeVO, entry.getKey(), mensalidade));
+						.gerarMensalidade(entry.getKey(), mensalidade));
 			}
 		}
 	}

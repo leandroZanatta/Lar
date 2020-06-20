@@ -2,6 +2,7 @@ package br.com.lar.upgrade.service;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 
 import javax.swing.JOptionPane;
 
@@ -46,7 +47,8 @@ public class GerarVersaoERP {
 
 			versaoService.changeMavenVersion(pathDir, novaVersao);
 
-			interfaceJar.delete();
+			Files.deleteIfExists(interfaceJar.toPath());
+
 			interfaceJarDependencies.renameTo(interfaceJar);
 
 			atualizacaoJarDepencencies.renameTo(atualizacao);

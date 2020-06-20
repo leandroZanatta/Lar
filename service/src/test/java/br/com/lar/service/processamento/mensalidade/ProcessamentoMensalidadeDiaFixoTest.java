@@ -34,101 +34,105 @@ import org.mockito.runners.MockitoJUnitRunner;
 import br.com.lar.repository.dao.MensalidadePacienteDAO;
 import br.com.lar.repository.model.MensalidadePaciente;
 import br.com.sysdesc.util.classes.DateUtil;
-import br.com.sysdesc.util.vo.ConfiguracaoMensalidadeVO;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessamentoMensalidadeDiaFixoTest {
 
-    @Spy
-    @InjectMocks
-    private ProcessamentoMensalidadeDiaFixo processamentoMensalidadePrimeiroDia = new ProcessamentoMensalidadeDiaFixo(F1D15BOLETOS);
+	@Spy
+	@InjectMocks
+	private ProcessamentoMensalidadeDiaFixo processamentoMensalidadePrimeiroDia = new ProcessamentoMensalidadeDiaFixo(F1D15BOLETOS);
 
-    @Mock
-    private MensalidadePacienteDAO mensalidadePacienteDAO;
+	@Mock
+	private MensalidadePacienteDAO mensalidadePacienteDAO;
 
-    @Mock
-    private ProcessamentoMensalidadePaciente processamentoMensalidadePaciente;
+	@Mock
+	private ProcessamentoMensalidadePaciente processamentoMensalidadePaciente;
 
-    @Test()
-    public void testarProcessamentoDiarioSemPacientes() {
+	@Test()
+	public void testarProcessamentoDiarioSemPacientes() {
 
-        when(mensalidadePacienteDAO.listar()).thenReturn(new ArrayList<>());
+		when(mensalidadePacienteDAO.listar()).thenReturn(new ArrayList<>());
 
-        Date dataInicial = parse(FORMATO_DD_MM_YYY, "01/01/2019");
-        Date dataFinal = parse(FORMATO_DD_MM_YYY, "31/12/2019");
+		Date dataInicial = parse(FORMATO_DD_MM_YYY, "01/01/2019");
+		Date dataFinal = parse(FORMATO_DD_MM_YYY, "31/12/2019");
 
-        while (DateUtil.menorOuIgual(dataInicial, dataFinal)) {
+		while (DateUtil.menorOuIgual(dataInicial, dataFinal)) {
 
-            processamentoMensalidadePrimeiroDia.processar(dataInicial);
+			processamentoMensalidadePrimeiroDia.processar(dataInicial);
 
-            dataInicial = addDays(dataInicial, 1L);
-        }
+			dataInicial = addDays(dataInicial, 1L);
+		}
 
-        verify(mensalidadePacienteDAO, times(12)).listar();
-        verify(processamentoMensalidadePaciente, times(0)).gerarMensalidade(any(ConfiguracaoMensalidadeVO.class), any(Date.class),
-                any(MensalidadePaciente.class));
-    }
+		verify(mensalidadePacienteDAO, times(12)).listar();
+		verify(processamentoMensalidadePaciente, times(0)).gerarMensalidade(any(Date.class),
+				any(MensalidadePaciente.class));
+	}
 
-    @Test()
-    public void testarProcessamentoDiarioComPacientes() {
+	@Test()
+	public void testarProcessamentoDiarioComPacientes() {
 
-        Long dia = 31L;
+		Long dia = 31L;
 
-        MensalidadePaciente mensalidadePaciente = createMensalidade(createPaciente(createCliente(1L, "João"), null),
-                createFormaPagamento("dinheiro", null), dia, 10L, false, false);
+		MensalidadePaciente mensalidadePaciente = createMensalidade(createPaciente(createCliente(1L, "João"), null),
+				createFormaPagamento("dinheiro", null), dia, 10L, false, false);
 
-        when(mensalidadePacienteDAO.listar()).thenReturn(Arrays.asList(mensalidadePaciente));
+		when(mensalidadePacienteDAO.listar()).thenReturn(Arrays.asList(mensalidadePaciente));
 
-        Date dataInicial = parse(FORMATO_DD_MM_YYY, "01/01/2019");
-        Date dataFinal = parse(FORMATO_DD_MM_YYY, "31/12/2019");
+		Date dataInicial = parse(FORMATO_DD_MM_YYY, "01/01/2019");
+		Date dataFinal = parse(FORMATO_DD_MM_YYY, "31/12/2019");
 
-        while (DateUtil.menorOuIgual(dataInicial, dataFinal)) {
+		while (DateUtil.menorOuIgual(dataInicial, dataFinal)) {
 
-            processamentoMensalidadePrimeiroDia.processar(dataInicial);
+			processamentoMensalidadePrimeiroDia.processar(dataInicial);
 
-            dataInicial = addDays(dataInicial, 1L);
-        }
+			dataInicial = addDays(dataInicial, 1L);
+		}
 
-        System.out.println("Testando dia:" + dia);
+		System.out.println("Testando dia:" + dia);
 
-        ArgumentCaptor<Date> dataGeracao = ArgumentCaptor.forClass(Date.class);
+		ArgumentCaptor<Date> dataGeracao = ArgumentCaptor.forClass(Date.class);
 
-        verify(mensalidadePacienteDAO, times(12)).listar();
+		verify(mensalidadePacienteDAO, times(12)).listar();
 
-        verify(processamentoMensalidadePaciente, times(12)).gerarMensalidade(any(ConfiguracaoMensalidadeVO.class), dataGeracao.capture(),
-                any(MensalidadePaciente.class));
-        assertEquals(dataGeracao.getAllValues().size(), 12);
+		verify(processamentoMensalidadePaciente, times(12)).gerarMensalidade(dataGeracao.capture(),
+				any(MensalidadePaciente.class));
+		assertEquals(12, dataGeracao.getAllValues().size());
 
-        List<String> datas = dataGeracao.getAllValues().stream().map(data -> format(FORMATO_DD_MM_YYY, data)).collect(Collectors.toList());
+		List<String> datas = dataGeracao.getAllValues().stream().map(data -> format(FORMATO_DD_MM_YYY, data)).collect(Collectors.toList());
 
-        System.out.println("Mensalidades: " + datas);
+		System.out.println("Mensalidades: " + datas);
 
-        for (Date data : dataGeracao.getAllValues()) {
+		for (Date data : dataGeracao.getAllValues()) {
 
-            Integer diaMesAtual = dia.intValue() > getLastDayOfMonth(data) ? getLastDayOfMonth(data) : dia.intValue();
+			Integer diaMesAtual = dia.intValue() > getLastDayOfMonth(data) ? getLastDayOfMonth(data) : dia.intValue();
 
-            assertEquals(diaMesAtual, getDayOfMonth(data));
+			assertEquals(diaMesAtual, getDayOfMonth(data));
 
-        }
-    }
+		}
+	}
 
-    /* @Test()
-    public void testarProcessamentoDiarioComPacienteAposDataVencimento() {
-    
-        MensalidadePaciente mensalidadePaciente = createMensalidade(createPaciente(createCliente(1L, "João"), null),
-                createFormaPagamento("dinheiro", null), 5L, 40L, false, false);
-    
-        when(mensalidadePacienteDAO.listar()).thenReturn(Arrays.asList(mensalidadePaciente));
-    
-        processamentoMensalidadePrimeiroDia.processar(DateUtil.parse(FORMATO_DD_MM_YYY, "15/05/2020"));
-    
-        ArgumentCaptor<Date> dataGeracao = ArgumentCaptor.forClass(Date.class);
-    
-        verify(mensalidadePacienteDAO, times(1)).listar();
-        verify(processamentoMensalidadePaciente, times(1)).gerarMensalidade(any(ConfiguracaoMensalidadeVO.class), dataGeracao.capture(),
-                any(MensalidadePaciente.class));
-        assertEquals(1, dataGeracao.getAllValues().size());
-        assertEquals("15/05/2020", DateUtil.format(FORMATO_DD_MM_YYY, dataGeracao.getValue()));
-    }*/
+	/*
+	 * @Test() public void testarProcessamentoDiarioComPacienteAposDataVencimento()
+	 * {
+	 * 
+	 * MensalidadePaciente mensalidadePaciente =
+	 * createMensalidade(createPaciente(createCliente(1L, "João"), null),
+	 * createFormaPagamento("dinheiro", null), 5L, 40L, false, false);
+	 * 
+	 * when(mensalidadePacienteDAO.listar()).thenReturn(Arrays.asList(
+	 * mensalidadePaciente));
+	 * 
+	 * processamentoMensalidadePrimeiroDia.processar(DateUtil.parse(
+	 * FORMATO_DD_MM_YYY, "15/05/2020"));
+	 * 
+	 * ArgumentCaptor<Date> dataGeracao = ArgumentCaptor.forClass(Date.class);
+	 * 
+	 * verify(mensalidadePacienteDAO, times(1)).listar();
+	 * verify(processamentoMensalidadePaciente,
+	 * times(1)).gerarMensalidade(any(ConfiguracaoMensalidadeVO.class),
+	 * dataGeracao.capture(), any(MensalidadePaciente.class)); assertEquals(1,
+	 * dataGeracao.getAllValues().size()); assertEquals("15/05/2020",
+	 * DateUtil.format(FORMATO_DD_MM_YYY, dataGeracao.getValue())); }
+	 */
 
 }

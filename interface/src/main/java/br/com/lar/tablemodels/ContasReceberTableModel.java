@@ -13,145 +13,140 @@ import br.com.sysdesc.util.enumeradores.TipoStatusEnum;
 
 public class ContasReceberTableModel extends AbstractInternalFrameTable {
 
-    private static final long serialVersionUID = 1L;
-    private List<ContasReceber> rows = new ArrayList<>();
-    private List<String> colunas = new ArrayList<>();
-    private NumberFormat numberFormat = NumberFormat.getNumberInstance();
-    private NumberFormat codigoContasReceberFormat = NumberFormat.getNumberInstance();
+	private static final long serialVersionUID = 1L;
+	private List<ContasReceber> rows = new ArrayList<>();
+	private List<String> colunas = new ArrayList<>();
+	private NumberFormat numberFormat = NumberFormat.getNumberInstance();
+	private NumberFormat codigoContasReceberFormat = NumberFormat.getNumberInstance();
 
-    public ContasReceberTableModel() {
+	public ContasReceberTableModel() {
 
-        colunas.add("Código");
-        colunas.add("Forma Pagamento");
-        colunas.add("Vencimento");
-        colunas.add("Programa");
-        colunas.add("Valor");
-        colunas.add("Acréscimo");
-        colunas.add("Desconto");
-        colunas.add("Valor Pago");
-        colunas.add("Baixado");
-        colunas.add("Status");
+		colunas.add("Código");
+		colunas.add("Forma Pagamento");
+		colunas.add("Vencimento");
+		colunas.add("Programa");
+		colunas.add("Valor");
+		colunas.add("Acréscimo");
+		colunas.add("Desconto");
+		colunas.add("Valor Pago");
+		colunas.add("Baixado");
+		colunas.add("Status");
 
-        codigoContasReceberFormat.setMaximumFractionDigits(0);
-        codigoContasReceberFormat.setMinimumFractionDigits(0);
-        codigoContasReceberFormat.setGroupingUsed(true);
+		codigoContasReceberFormat.setMaximumFractionDigits(0);
+		codigoContasReceberFormat.setMinimumFractionDigits(0);
+		codigoContasReceberFormat.setGroupingUsed(true);
 
-        numberFormat.setMaximumFractionDigits(2);
-        numberFormat.setMinimumFractionDigits(2);
-        numberFormat.setGroupingUsed(true);
+		numberFormat.setMaximumFractionDigits(2);
+		numberFormat.setMinimumFractionDigits(2);
+		numberFormat.setGroupingUsed(true);
 
-    }
+	}
 
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
 
-        ContasReceber contasReceber = rows.get(rowIndex);
+		ContasReceber contasReceber = rows.get(rowIndex);
 
-        switch (columnIndex) {
+		switch (columnIndex) {
 
-            case 0:
-                return codigoContasReceberFormat.format(contasReceber.getIdContasReceber());
+		case 0:
+			return codigoContasReceberFormat.format(contasReceber.getIdContasReceber());
 
-            case 1:
-                return contasReceber.getFormasPagamento().getDescricao();
+		case 1:
+			return contasReceber.getFormasPagamento().getDescricao();
 
-            case 2:
-                return DateUtil.format(DateUtil.FORMATO_DD_MM_YYY, contasReceber.getDataVencimento());
+		case 2:
+			return DateUtil.format(DateUtil.FORMATO_DD_MM_YYY, contasReceber.getDataVencimento());
 
-            case 3:
-                return contasReceber.getPrograma();
+		case 3:
+			return contasReceber.getPrograma();
 
-            case 4:
-                return numberFormat.format(contasReceber.getValorParcela());
+		case 4:
+			return numberFormat.format(contasReceber.getValorParcela());
 
-            case 5:
-                return numberFormat.format(contasReceber.getValorAcrescimo());
+		case 5:
+			return numberFormat.format(contasReceber.getValorAcrescimo());
 
-            case 6:
-                return numberFormat.format(contasReceber.getValorDesconto());
+		case 6:
+			return numberFormat.format(contasReceber.getValorDesconto());
 
-            case 7:
-                return numberFormat.format(contasReceber.getValorPago());
+		case 7:
+			return numberFormat.format(contasReceber.getValorPago());
 
-            case 8:
-                return contasReceber.isBaixado() ? "Sim" : "Não";
+		case 8:
+			return contasReceber.isBaixado() ? "Sim" : "Não";
 
-            case 9:
-                return TipoStatusEnum.findByCodigo(contasReceber.getCodigoStatus()).getDescricao();
+		case 9:
+			return TipoStatusEnum.findByCodigo(contasReceber.getCodigoStatus()).getDescricao();
 
-            default:
-                return null;
-        }
-    }
+		default:
+			return null;
+		}
+	}
 
-    @Override
-    public int getColumnCount() {
-        return colunas.size();
-    }
+	@Override
+	public int getColumnCount() {
+		return colunas.size();
+	}
 
-    @Override
-    public String getColumnName(int column) {
-        return colunas.get(column);
-    }
+	@Override
+	public String getColumnName(int column) {
+		return colunas.get(column);
+	}
 
-    @Override
-    public int getRowCount() {
-        return rows.size();
-    }
+	@Override
+	public int getRowCount() {
+		return rows.size();
+	}
 
-    @Override
-    public Class<?> getColumnClass(int columnIndex) {
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
 
-        return String.class;
-    }
+		return String.class;
+	}
 
-    @Override
-    public boolean isCellEditable(int row, int column) {
+	@Override
+	public boolean isCellEditable(int row, int column) {
 
-        return Boolean.FALSE;
-    }
+		return Boolean.FALSE;
+	}
 
-    public ContasReceber getRow(int selectedRow) {
-        return rows.get(selectedRow);
-    }
+	public ContasReceber getRow(int selectedRow) {
+		return rows.get(selectedRow);
+	}
 
-    public void remove(int selectedRow) {
-        rows.remove(selectedRow);
-        fireTableDataChanged();
-    }
+	public void remove(int selectedRow) {
+		rows.remove(selectedRow);
+		fireTableDataChanged();
+	}
 
-    public void removeAll() {
-        rows = new ArrayList<>();
-        fireTableDataChanged();
-    }
+	public void removeAll() {
+		rows = new ArrayList<>();
+		fireTableDataChanged();
+	}
 
-    public List<ContasReceber> getRows() {
-        return rows;
-    }
+	public List<ContasReceber> getRows() {
+		return rows;
+	}
 
-    public void setRows(List<ContasReceber> rows) {
-        this.rows = Lists.newArrayList(rows);
-        fireTableDataChanged();
-    }
+	public void setRows(List<ContasReceber> rows) {
+		this.rows = Lists.newArrayList(rows);
+		fireTableDataChanged();
+	}
 
-    public void addRow(ContasReceber configuracaoPesquisa) {
+	public void addRow(ContasReceber configuracaoPesquisa) {
 
-        this.rows.add(configuracaoPesquisa);
+		this.rows.add(configuracaoPesquisa);
 
-        fireTableDataChanged();
+		fireTableDataChanged();
 
-    }
+	}
 
-    @Override
-    public void clear() {
-        this.rows = new ArrayList<>();
+	@Override
+	public void clear() {
+		this.rows = new ArrayList<>();
 
-        fireTableDataChanged();
-    }
-
-    @Override
-    public void setEnabled(Boolean enabled) {
-
-    }
+		fireTableDataChanged();
+	}
 
 }

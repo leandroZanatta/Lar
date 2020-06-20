@@ -38,177 +38,178 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ServidorEmail {
 
-    private static ServidorEmail servidorEmail;
+	private static ServidorEmail servidorEmail;
 
-    private Session session;
+	private Session session;
 
-    private ConfiguracaoEmailVO configuracaoEmailVO;
+	private ConfiguracaoEmailVO configuracaoEmailVO;
 
-    private ServidorEmail(ConfiguracaoEmailVO configuracaoEmailVO) {
-        this.configuracaoEmailVO = configuracaoEmailVO;
+	private ServidorEmail(ConfiguracaoEmailVO configuracaoEmailVO) {
+		this.configuracaoEmailVO = configuracaoEmailVO;
 
-        createSession();
-    }
+		createSession();
+	}
 
-    private void createSession() {
+	private void createSession() {
 
-        this.session = Session.getInstance(getPropertiesFromParametros(configuracaoEmailVO), new UserAuthenticator(configuracaoEmailVO));
+		this.session = Session.getInstance(getPropertiesFromParametros(configuracaoEmailVO), new UserAuthenticator(configuracaoEmailVO));
 
-        this.session.setDebug(true);
-    }
+		this.session.setDebug(true);
+	}
 
-    private Properties getPropertiesFromParametros(ConfiguracaoEmailVO configuracaoEmailVO) {
+	private Properties getPropertiesFromParametros(ConfiguracaoEmailVO configuracaoEmailVO) {
 
-        return ConfiguracaoEmailEnum.forCodigo(configuracaoEmailVO.getCodigoConfiguracao()).getConfiguracao();
-    }
+		return ConfiguracaoEmailEnum.forCodigo(configuracaoEmailVO.getCodigoConfiguracao()).getConfiguracao();
+	}
 
-    public boolean sendMessage(String email, String assunto, String mensagem) {
+	public boolean sendMessage(String email, String assunto, String mensagem) {
 
-        return sendMessage(email, assunto, mensagem, new ArrayList<>());
-    }
+		return sendMessage(email, assunto, mensagem, new ArrayList<>());
+	}
 
-    public boolean sendHtmlMessage(String email, String assunto, String mensagem, CIDVO... cids) {
+	public boolean sendHtmlMessage(String email, String assunto, String mensagem, CIDVO... cids) {
 
-        return sendHtmlMessage(email, assunto, mensagem, new ArrayList<>(), cids);
-    }
+		return sendHtmlMessage(email, assunto, mensagem, new ArrayList<>(), cids);
+	}
 
-    public boolean sendMessage(String email, String assunto, String mensagem, List<AttachamentVO> atachaments) {
+	public boolean sendMessage(String email, String assunto, String mensagem, List<AttachamentVO> atachaments) {
 
-        try {
+		try {
 
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(configuracaoEmailVO.getUsuario()));
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(configuracaoEmailVO.getUsuario()));
 
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-            message.setSubject(assunto);
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+			message.setSubject(assunto);
 
-            Multipart multipart = new MimeMultipart();
+			Multipart multipart = new MimeMultipart();
 
-            MimeBodyPart contentBodyPart = new MimeBodyPart();
+			MimeBodyPart contentBodyPart = new MimeBodyPart();
 
-            contentBodyPart.setText(mensagem);
+			contentBodyPart.setText(mensagem);
 
-            multipart.addBodyPart(contentBodyPart);
+			multipart.addBodyPart(contentBodyPart);
 
-            this.appendSources(atachaments, multipart);
+			this.appendSources(atachaments, multipart);
 
-            message.setContent(multipart);
+			message.setContent(multipart);
 
-            Transport.send(message);
+			Transport.send(message);
 
-            return true;
+			return true;
 
-        } catch (MessagingException e) {
+		} catch (MessagingException e) {
 
-            log.error("erro enviando email para: {}", email, e);
-        }
+			log.error("erro enviando email para: {}", email, e);
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public boolean sendHtmlMessage(String email, String assunto, String mensagem, List<AttachamentVO> atachaments, CIDVO... cids) {
+	public boolean sendHtmlMessage(String email, String assunto, String mensagem, List<AttachamentVO> atachaments, CIDVO... cids) {
 
-        try {
+		try {
 
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(configuracaoEmailVO.getUsuario()));
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(configuracaoEmailVO.getUsuario()));
 
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-            message.setSubject(assunto);
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+			message.setSubject(assunto);
 
-            Multipart multipart = new MimeMultipart();
+			Multipart multipart = new MimeMultipart();
 
-            MimeBodyPart contentBodyPart = new MimeBodyPart();
+			MimeBodyPart contentBodyPart = new MimeBodyPart();
 
-            contentBodyPart.setContent(mensagem, "text/html; charset=UTF-8");
+			contentBodyPart.setContent(mensagem, "text/html; charset=UTF-8");
 
-            multipart.addBodyPart(contentBodyPart);
+			multipart.addBodyPart(contentBodyPart);
 
-            this.appendMimes(multipart, cids);
+			this.appendMimes(multipart, cids);
 
-            this.appendSources(atachaments, multipart);
+			this.appendSources(atachaments, multipart);
 
-            message.setContent(multipart);
+			message.setContent(multipart);
 
-            Transport.send(message);
+			Transport.send(message);
 
-            return true;
+			return true;
 
-        } catch (MessagingException e) {
+		} catch (MessagingException e) {
 
-            log.error("erro enviando email para: {}", email, e);
-        }
+			log.error("erro enviando email para: {}", email, e);
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    private void appendMimes(Multipart multipart, CIDVO... cids) throws MessagingException {
+	private void appendMimes(Multipart multipart, CIDVO... cids) throws MessagingException {
 
-        for (CIDVO cid : Arrays.asList(cids)) {
+		for (CIDVO cid : Arrays.asList(cids)) {
 
-            MimeBodyPart cidBodyPart = new MimeBodyPart();
+			MimeBodyPart cidBodyPart = new MimeBodyPart();
 
-            cidBodyPart.setDataHandler(new DataHandler(new FileDataSource(cid.getArquivo())));
-            cidBodyPart.setHeader("Content-ID", String.format("<%s>", cid.getCid()));
+			cidBodyPart.setDataHandler(new DataHandler(new FileDataSource(cid.getArquivo())));
+			cidBodyPart.setHeader("Content-ID", String.format("<%s>", cid.getCid()));
 
-            multipart.addBodyPart(cidBodyPart);
-        }
-    }
+			multipart.addBodyPart(cidBodyPart);
+		}
+	}
 
-    private void appendSources(List<AttachamentVO> atachaments, Multipart multipart) throws MessagingException {
+	private void appendSources(List<AttachamentVO> atachaments, Multipart multipart) throws MessagingException {
 
-        for (AttachamentVO attachament : atachaments) {
+		for (AttachamentVO attachament : atachaments) {
 
-            MimeBodyPart messageBodyPart = new MimeBodyPart();
+			MimeBodyPart messageBodyPart = new MimeBodyPart();
 
-            messageBodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(attachament.getFile(), attachament.getMime())));
+			messageBodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(attachament.getFile(), attachament.getMime())));
 
-            messageBodyPart.setFileName(attachament.getName());
+			messageBodyPart.setFileName(attachament.getName());
 
-            multipart.addBodyPart(messageBodyPart);
-        }
-    }
+			multipart.addBodyPart(messageBodyPart);
+		}
+	}
 
-    public static ServidorEmail getInstance() {
+	public static ServidorEmail getInstance() {
 
-        if (servidorEmail == null) {
+		if (servidorEmail == null) {
 
-            ConfiguracaoEmailVO configuracaoEmailVO = getConfiguracaoFromParametros();
+			ConfiguracaoEmailVO configuracaoEmailVO = getConfiguracaoFromParametros();
 
-            servidorEmail = new ServidorEmail(configuracaoEmailVO);
-        }
+			servidorEmail = new ServidorEmail(configuracaoEmailVO);
+		}
 
-        return servidorEmail;
-    };
+		return servidorEmail;
+	}
 
-    public static ServidorEmail getTestInstance(ConfiguracaoEmailVO configuracaoEmailVO) {
+	public static ServidorEmail getTestInstance(ConfiguracaoEmailVO configuracaoEmailVO) {
 
-        return new ServidorEmail(configuracaoEmailVO);
-    };
+		return new ServidorEmail(configuracaoEmailVO);
+	}
 
-    private static ConfiguracaoEmailVO getConfiguracaoFromParametros() {
+	private static ConfiguracaoEmailVO getConfiguracaoFromParametros() {
 
-        Parametros parametros = new ParametrosDAO().first();
+		Parametros parametros = new ParametrosDAO().first();
 
-        if (parametros == null || StringUtil.isNullOrEmpty(parametros.getConfigEmail())) {
-            throw new SysDescException(MensagemConstants.MENSAGEM_CONFIGURAR_PARAMETROS);
-        }
+		if (parametros == null || StringUtil.isNullOrEmpty(parametros.getConfigEmail())) {
+			throw new SysDescException(MensagemConstants.MENSAGEM_CONFIGURAR_PARAMETROS);
+		}
 
-        return new Gson().fromJson(CryptoUtil.fromBlowfish(parametros.getConfigEmail()), ConfiguracaoEmailVO.class);
-    }
+		return new Gson().fromJson(CryptoUtil.fromBlowfish(parametros.getConfigEmail()), ConfiguracaoEmailVO.class);
+	}
 
 }
 
 class UserAuthenticator extends Authenticator {
 
-    private final ConfiguracaoEmailVO configuracao;
+	private final ConfiguracaoEmailVO configuracao;
 
-    public UserAuthenticator(ConfiguracaoEmailVO configuracao) {
-        this.configuracao = configuracao;
-    }
+	public UserAuthenticator(ConfiguracaoEmailVO configuracao) {
+		this.configuracao = configuracao;
+	}
 
-    protected PasswordAuthentication getPasswordAuthentication() {
+	@Override
+	protected PasswordAuthentication getPasswordAuthentication() {
 
-        return new PasswordAuthentication(this.configuracao.getUsuario(), this.configuracao.getSenha());
-    }
+		return new PasswordAuthentication(this.configuracao.getUsuario(), this.configuracao.getSenha());
+	}
 }

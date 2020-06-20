@@ -1,6 +1,5 @@
 package br.com.lar.service.processamento.mensalidade;
 
-import static br.com.lar.service.Util.ResourcesTest.F1D20BOLETOS;
 import static br.com.lar.service.Util.ResourcesTest.createCliente;
 import static br.com.lar.service.Util.ResourcesTest.createFormaPagamento;
 import static br.com.lar.service.Util.ResourcesTest.createMensalidade;
@@ -34,15 +33,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 import br.com.lar.repository.dao.MensalidadePacienteDAO;
 import br.com.lar.repository.model.MensalidadePaciente;
 import br.com.sysdesc.util.classes.DateUtil;
-import br.com.sysdesc.util.vo.ConfiguracaoMensalidadeVO;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessamentoMensalidadeUltimoDiaTest {
 
 	@Spy
 	@InjectMocks
-	private ProcessamentoMensalidadeUltimoDia processamentoMensalidadePrimeiroDia = new ProcessamentoMensalidadeUltimoDia(
-			F1D20BOLETOS);
+	private ProcessamentoMensalidadeUltimoDia processamentoMensalidadePrimeiroDia = new ProcessamentoMensalidadeUltimoDia();
 
 	@Mock
 	private MensalidadePacienteDAO mensalidadePacienteDAO;
@@ -66,7 +63,7 @@ public class ProcessamentoMensalidadeUltimoDiaTest {
 		}
 
 		verify(mensalidadePacienteDAO, times(12)).listar();
-		verify(processamentoMensalidadePaciente, times(0)).gerarMensalidade(any(ConfiguracaoMensalidadeVO.class),
+		verify(processamentoMensalidadePaciente, times(0)).gerarMensalidade(
 				any(Date.class), any(MensalidadePaciente.class));
 	}
 
@@ -96,9 +93,9 @@ public class ProcessamentoMensalidadeUltimoDiaTest {
 
 		verify(mensalidadePacienteDAO, times(12)).listar();
 
-		verify(processamentoMensalidadePaciente, times(12)).gerarMensalidade(any(ConfiguracaoMensalidadeVO.class),
+		verify(processamentoMensalidadePaciente, times(12)).gerarMensalidade(
 				dataGeracao.capture(), any(MensalidadePaciente.class));
-		assertEquals(dataGeracao.getAllValues().size(), 12);
+		assertEquals(12, dataGeracao.getAllValues().size());
 
 		List<String> datas = dataGeracao.getAllValues().stream().map(data -> format(FORMATO_DD_MM_YYY, data))
 				.collect(Collectors.toList());

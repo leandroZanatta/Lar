@@ -1,6 +1,8 @@
 package br.com.lar.atualizacao.changelog.core;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.util.logging.Logger;
 
@@ -13,8 +15,13 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.FileSystemResourceAccessor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Changelog {
+
+	private Changelog() {
+	}
 
 	public static void runChangelog(Connection connection) {
 
@@ -54,10 +61,21 @@ public class Changelog {
 				deletarChangelogs(arquivo);
 			}
 
-			arquivo.delete();
+			deleteFile(arquivo);
 		}
 
-		pastaChangelog.delete();
+		deleteFile(pastaChangelog);
+	}
+
+	private static void deleteFile(File arquivo) {
+
+		try {
+			Files.delete(arquivo.toPath());
+
+		} catch (IOException e) {
+
+			log.error("Não foi possivel deletar o arquivo:{}", arquivo, e);
+		}
 
 	}
 }

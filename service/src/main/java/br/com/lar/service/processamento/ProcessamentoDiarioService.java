@@ -25,112 +25,112 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProcessamentoDiarioService {
 
-    private ProcessamentoDiarioDAO processamentoDiarioDAO = new ProcessamentoDiarioDAO();
+	private ProcessamentoDiarioDAO processamentoDiarioDAO = new ProcessamentoDiarioDAO();
 
-    private ProcessamentoMensalidadeFactory processamentoMensalidadeFactory = new ProcessamentoMensalidadeFactory();
+	private ProcessamentoMensalidadeFactory processamentoMensalidadeFactory = new ProcessamentoMensalidadeFactory();
 
-    private ProcessamentoBoletoMensalidade processamentoBoletoMensalidade = new ProcessamentoBoletoMensalidade();
+	private ProcessamentoBoletoMensalidade processamentoBoletoMensalidade = new ProcessamentoBoletoMensalidade();
 
-    private RemessaService remessaService = new RemessaService();
+	private RemessaService remessaService = new RemessaService();
 
-    private ParametrosDAO parametrosDAO = new ParametrosDAO();
+	private ParametrosDAO parametrosDAO = new ParametrosDAO();
 
-    private EmailService emailService = new EmailService();
+	private EmailService emailService = new EmailService();
 
-    public void iniciarProcessamento() {
+	public void iniciarProcessamento() {
 
-        Parametros parametros = parametrosDAO.first();
+		Parametros parametros = parametrosDAO.first();
 
-        if (parametros == null) {
-            throw new SysDescException(MensagemConstants.MENSAGEM_CONFIGURAR_PARAMETROS);
-        }
+		if (parametros == null) {
+			throw new SysDescException(MensagemConstants.MENSAGEM_CONFIGURAR_PARAMETROS);
+		}
 
-        try {
-            processamentoDiarioDAO.atualizarProcessamentosAnteriores();
+		try {
+			processamentoDiarioDAO.atualizarProcessamentosAnteriores();
 
-            this.executarProcessoDiario(parametros);
+			this.executarProcessoDiario(parametros);
 
-            this.executarProcessosAutomaticos(parametros);
+			this.executarProcessosAutomaticos();
 
-        } catch (SysDescException e) {
+		} catch (SysDescException e) {
 
-            log.error("Erro ao executar o processamento diário", e);
-        }
-    }
+			log.error("Erro ao executar o processamento diário", e);
+		}
+	}
 
-    private void executarProcessosAutomaticos(Parametros parametros) {
+	private void executarProcessosAutomaticos() {
 
-        remessaService.processarRemessaBancosSuportados();
+		remessaService.processarRemessaBancosSuportados();
 
-        emailService.enviarEmails();
-    }
+		emailService.enviarEmails();
+	}
 
-    private void executarProcessoDiario(Parametros parametros) {
+	private void executarProcessoDiario(Parametros parametros) {
 
-        ConfiguracaoMensalidadeVO configuracaoMensalidadeVO = new Gson().fromJson(CryptoUtil.fromBlowfish(parametros.getConfigMensalidade()),
-                ConfiguracaoMensalidadeVO.class);
+		ConfiguracaoMensalidadeVO configuracaoMensalidadeVO = new Gson().fromJson(CryptoUtil.fromBlowfish(parametros.getConfigMensalidade()),
+				ConfiguracaoMensalidadeVO.class);
 
-        Date dataProcessar = this.buscarDataProcesar();
+		Date dataProcessar = this.buscarDataProcesar();
 
-        while (menorOuIgual(dataProcessar, getInitialDate(new Date()))) {
+		while (menorOuIgual(dataProcessar, getInitialDate(new Date()))) {
 
-            this.processarData(dataProcessar, configuracaoMensalidadeVO);
+			this.processarData(dataProcessar, configuracaoMensalidadeVO);
 
-            dataProcessar = addDays(dataProcessar, 1L);
-        }
-    }
+			dataProcessar = addDays(dataProcessar, 1L);
+		}
+	}
 
-    private void processarData(Date dataProcessar, ConfiguracaoMensalidadeVO configuracaoMensalidadeVO) {
+	private void processarData(Date dataProcessar, ConfiguracaoMensalidadeVO configuracaoMensalidadeVO) {
 
-        ProcessamentoDiario processamentoDiario = registrarInicioProcessamento(dataProcessar);
+		ProcessamentoDiario processamentoDiario = registrarInicioProcessamento(dataProcessar);
 
-        try {
+		try {
 
-            processamentoMensalidadeFactory.getProcessamento(configuracaoMensalidadeVO).processar(dataProcessar);
+			processamentoMensalidadeFactory.getProcessamento(configuracaoMensalidadeVO).processar(dataProcessar);
 
-            processamentoBoletoMensalidade.gerarBoleto(dataProcessar, configuracaoMensalidadeVO);
+			processamentoBoletoMensalidade.gerarBoleto(dataProcessar, configuracaoMensalidadeVO);
 
-            registrarProcessamento(processamentoDiario, ProcessamentoDiarioEnum.CONCLUIDO);
+			registrarProcessamento(processamentoDiario, ProcessamentoDiarioEnum.CONCLUIDO);
 
-        } catch (Exception e) {
+		} catch (Exception e) {
 
-            log.error("Erro ao executar processamento diário", e);
+			log.error("Erro ao executar processamento diário", e);
 
-            registrarProcessamento(processamentoDiario, ProcessamentoDiarioEnum.ERRO);
+			registrarProcessamento(processamentoDiario, ProcessamentoDiarioEnum.ERRO);
 
-            throw new SysDescException(MensagemConstants.MENSAGEM_ERRO_PROCESSAMENTO_DIARIO);
-        }
-    }
+			throw new SysDescException(MensagemConstants.MENSAGEM_ERRO_PROCESSAMENTO_DIARIO);
+		}
+	}
 
-    private ProcessamentoDiario registrarInicioProcessamento(Date dataProcessar) {
+	private ProcessamentoDiario registrarInicioProcessamento(Date dataProcessar) {
 
-        ProcessamentoDiario processamentoDiario = new ProcessamentoDiario();
-        processamentoDiario.setDataProcessamento(dataProcessar);
-        processamentoDiario.setDataInicio(new Date());
-        processamentoDiario.setCodigoStatus(ProcessamentoDiarioEnum.INICIANDO.getCodigo());
+		ProcessamentoDiario processamentoDiario = new ProcessamentoDiario();
+		processamentoDiario.setDataProcessamento(dataProcessar);
+		processamentoDiario.setDataInicio(new Date());
+		processamentoDiario.setCodigoStatus(ProcessamentoDiarioEnum.INICIANDO.getCodigo());
 
-        processamentoDiarioDAO.salvar(processamentoDiario);
+		processamentoDiarioDAO.salvar(processamentoDiario);
 
-        return processamentoDiario;
-    }
+		return processamentoDiario;
+	}
 
-    private void registrarProcessamento(ProcessamentoDiario processamentoDiario, ProcessamentoDiarioEnum status) {
+	private void registrarProcessamento(ProcessamentoDiario processamentoDiario, ProcessamentoDiarioEnum status) {
 
-        processamentoDiario.setCodigoStatus(status.getCodigo());
-        processamentoDiario.setDataFim(new Date());
+		processamentoDiario.setCodigoStatus(status.getCodigo());
+		processamentoDiario.setDataFim(new Date());
 
-        processamentoDiarioDAO.salvar(processamentoDiario);
-    }
+		processamentoDiarioDAO.salvar(processamentoDiario);
+	}
 
-    private Date buscarDataProcesar() {
+	private Date buscarDataProcesar() {
 
-        Date ultimaDataProcessada = processamentoDiarioDAO.buscarUltimaDataProcesada();
+		Date ultimaDataProcessada = processamentoDiarioDAO.buscarUltimaDataProcesada();
 
-        if (ultimaDataProcessada != null) {
-            return addDays(ultimaDataProcessada, 1L);
-        }
+		if (ultimaDataProcessada != null) {
+			return addDays(ultimaDataProcessada, 1L);
+		}
 
-        return getInitialDate(new Date());
-    }
+		return getInitialDate(new Date());
+	}
 
 }

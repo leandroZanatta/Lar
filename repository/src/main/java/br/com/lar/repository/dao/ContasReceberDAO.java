@@ -17,115 +17,116 @@ import br.com.sysdesc.util.classes.BigDecimalUtil;
 import br.com.sysdesc.util.classes.LongUtil;
 import br.com.sysdesc.util.classes.StringUtil;
 import br.com.sysdesc.util.enumeradores.TipoProgramaContasReceberEnum;
+import br.com.sysdesc.util.exception.SysDescException;
 import br.com.sysdesc.util.vo.PesquisaContasReceberVO;
 
 public class ContasReceberDAO extends PesquisableDAOImpl<ContasReceber> {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public ContasReceberDAO() {
-        super(contasReceber, contasReceber.idContasReceber);
-    }
+	public ContasReceberDAO() {
+		super(contasReceber, contasReceber.idContasReceber);
+	}
 
-    public List<ContasReceber> buscarTitulosAbertosCliente(Long idCliente) {
+	public List<ContasReceber> buscarTitulosAbertosCliente(Long idCliente) {
 
-        return from().where(contasReceber.cliente.idCliente.eq(idCliente).and(contasReceber.baixado.eq(Boolean.FALSE))).list(contasReceber);
-    }
+		return from().where(contasReceber.cliente.idCliente.eq(idCliente).and(contasReceber.baixado.eq(Boolean.FALSE))).list(contasReceber);
+	}
 
-    public List<ContasReceber> filtrarContasReceber(PesquisaContasReceberVO pesquisaContasReceberVO) {
+	public List<ContasReceber> filtrarContasReceber(PesquisaContasReceberVO pesquisaContasReceberVO) {
 
-        JPASQLQuery query = sqlFrom();
+		JPASQLQuery query = sqlFrom();
 
-        BooleanBuilder clausulas = montarClausulasFiltroContasReceber(pesquisaContasReceberVO);
+		BooleanBuilder clausulas = montarClausulasFiltroContasReceber(pesquisaContasReceberVO);
 
-        if (clausulas.hasValue()) {
-            query.where(clausulas);
-        }
+		if (clausulas.hasValue()) {
+			query.where(clausulas);
+		}
 
-        return query.list(contasReceber);
-    }
+		return query.list(contasReceber);
+	}
 
-    private BooleanBuilder montarClausulasFiltroContasReceber(PesquisaContasReceberVO pesquisaContasReceberVO) {
+	private BooleanBuilder montarClausulasFiltroContasReceber(PesquisaContasReceberVO pesquisaContasReceberVO) {
 
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
+		BooleanBuilder booleanBuilder = new BooleanBuilder();
 
-        if (!LongUtil.isNullOrZero(pesquisaContasReceberVO.getCodigoContasReceber())) {
-            booleanBuilder.and(contasReceber.idContasReceber.eq(pesquisaContasReceberVO.getCodigoContasReceber()));
-        }
+		if (!LongUtil.isNullOrZero(pesquisaContasReceberVO.getCodigoContasReceber())) {
+			booleanBuilder.and(contasReceber.idContasReceber.eq(pesquisaContasReceberVO.getCodigoContasReceber()));
+		}
 
-        if (!LongUtil.isNullOrZero(pesquisaContasReceberVO.getCodigoCliente())) {
-            booleanBuilder.and(contasReceber.codigoCliente.eq(pesquisaContasReceberVO.getCodigoCliente()));
-        }
+		if (!LongUtil.isNullOrZero(pesquisaContasReceberVO.getCodigoCliente())) {
+			booleanBuilder.and(contasReceber.codigoCliente.eq(pesquisaContasReceberVO.getCodigoCliente()));
+		}
 
-        if (!LongUtil.isNullOrZero(pesquisaContasReceberVO.getCodigoFormaPagamento())) {
-            booleanBuilder.and(contasReceber.codigoFormaPagamento.eq(pesquisaContasReceberVO.getCodigoFormaPagamento()));
-        }
+		if (!LongUtil.isNullOrZero(pesquisaContasReceberVO.getCodigoFormaPagamento())) {
+			booleanBuilder.and(contasReceber.codigoFormaPagamento.eq(pesquisaContasReceberVO.getCodigoFormaPagamento()));
+		}
 
-        if (!StringUtil.isNullOrEmpty(pesquisaContasReceberVO.getPrograma())) {
-            booleanBuilder.and(contasReceber.programa.eq(pesquisaContasReceberVO.getPrograma()));
-        }
+		if (!StringUtil.isNullOrEmpty(pesquisaContasReceberVO.getPrograma())) {
+			booleanBuilder.and(contasReceber.programa.eq(pesquisaContasReceberVO.getPrograma()));
+		}
 
-        if (pesquisaContasReceberVO.getDataVencimentoInicial() != null || pesquisaContasReceberVO.getDataVencimentoFinal() != null) {
+		if (pesquisaContasReceberVO.getDataVencimentoInicial() != null || pesquisaContasReceberVO.getDataVencimentoFinal() != null) {
 
-            booleanBuilder
-                    .and(getDataVencimento(pesquisaContasReceberVO.getDataVencimentoInicial(), pesquisaContasReceberVO.getDataVencimentoFinal()));
-        }
+			booleanBuilder
+					.and(getDataVencimento(pesquisaContasReceberVO.getDataVencimentoInicial(), pesquisaContasReceberVO.getDataVencimentoFinal()));
+		}
 
-        if (!BigDecimalUtil.isNullOrZero(pesquisaContasReceberVO.getValorParcelaInicial())
-                || !BigDecimalUtil.isNullOrZero(pesquisaContasReceberVO.getValorParcelaFinal())) {
+		if (!BigDecimalUtil.isNullOrZero(pesquisaContasReceberVO.getValorParcelaInicial())
+				|| !BigDecimalUtil.isNullOrZero(pesquisaContasReceberVO.getValorParcelaFinal())) {
 
-            booleanBuilder.and(getValorParcela(pesquisaContasReceberVO.getValorParcelaInicial(), pesquisaContasReceberVO.getValorParcelaFinal()));
-        }
+			booleanBuilder.and(getValorParcela(pesquisaContasReceberVO.getValorParcelaInicial(), pesquisaContasReceberVO.getValorParcelaFinal()));
+		}
 
-        booleanBuilder.and(contasReceber.baixado.eq(pesquisaContasReceberVO.isDocumentoBaixado()));
+		booleanBuilder.and(contasReceber.baixado.eq(pesquisaContasReceberVO.isDocumentoBaixado()));
 
-        return booleanBuilder;
-    }
+		return booleanBuilder;
+	}
 
-    private Predicate getValorParcela(BigDecimal valorParcelaInicial, BigDecimal valorParcelaFinal) {
+	private Predicate getValorParcela(BigDecimal valorParcelaInicial, BigDecimal valorParcelaFinal) {
 
-        if (!BigDecimalUtil.isNullOrZero(valorParcelaInicial) && !BigDecimalUtil.isNullOrZero(valorParcelaFinal)) {
-            return contasReceber.valorParcela.between(valorParcelaInicial, valorParcelaFinal);
-        }
+		if (!BigDecimalUtil.isNullOrZero(valorParcelaInicial) && !BigDecimalUtil.isNullOrZero(valorParcelaFinal)) {
+			return contasReceber.valorParcela.between(valorParcelaInicial, valorParcelaFinal);
+		}
 
-        if (!BigDecimalUtil.isNullOrZero(valorParcelaInicial)) {
-            return contasReceber.valorParcela.goe(valorParcelaInicial);
-        }
+		if (!BigDecimalUtil.isNullOrZero(valorParcelaInicial)) {
+			return contasReceber.valorParcela.goe(valorParcelaInicial);
+		}
 
-        if (!BigDecimalUtil.isNullOrZero(valorParcelaFinal)) {
-            return contasReceber.valorParcela.loe(valorParcelaFinal);
-        }
+		if (!BigDecimalUtil.isNullOrZero(valorParcelaFinal)) {
+			return contasReceber.valorParcela.loe(valorParcelaFinal);
+		}
 
-        throw new RuntimeException("Pelo menos um valor de parcela deve ser informada");
-    }
+		throw new SysDescException("Pelo menos um valor de parcela deve ser informada");
+	}
 
-    private Predicate getDataVencimento(Date dataVencimentoInicial, Date dataVencimentoFinal) {
+	private Predicate getDataVencimento(Date dataVencimentoInicial, Date dataVencimentoFinal) {
 
-        if (dataVencimentoInicial != null && dataVencimentoFinal != null) {
-            return contasReceber.dataVencimento.between(dataVencimentoInicial, dataVencimentoFinal);
-        }
+		if (dataVencimentoInicial != null && dataVencimentoFinal != null) {
+			return contasReceber.dataVencimento.between(dataVencimentoInicial, dataVencimentoFinal);
+		}
 
-        if (dataVencimentoInicial != null) {
-            return contasReceber.dataVencimento.goe(dataVencimentoInicial);
-        }
+		if (dataVencimentoInicial != null) {
+			return contasReceber.dataVencimento.goe(dataVencimentoInicial);
+		}
 
-        if (dataVencimentoFinal != null) {
-            return contasReceber.dataVencimento.loe(dataVencimentoFinal);
-        }
+		if (dataVencimentoFinal != null) {
+			return contasReceber.dataVencimento.loe(dataVencimentoFinal);
+		}
 
-        throw new RuntimeException("Pelo menos uma data deve ser informada");
-    }
+		throw new SysDescException("Pelo menos uma data deve ser informada");
+	}
 
-    public List<ContasReceber> buscarContasReceberPacienteTipoBoleto(Long codigoCliente, boolean agruparContas) {
+	public List<ContasReceber> buscarContasReceberPacienteTipoBoleto(Long codigoCliente, boolean agruparContas) {
 
-        BooleanBuilder booleanBuilder = new BooleanBuilder(contasReceber.codigoCliente.eq(codigoCliente).and(
-                subQuery().from(contasReceberBoleto).where(contasReceber.idContasReceber.eq(contasReceberBoleto.codigoContasReceber)).notExists()));
+		BooleanBuilder booleanBuilder = new BooleanBuilder(contasReceber.codigoCliente.eq(codigoCliente).and(
+				subQuery().from(contasReceberBoleto).where(contasReceber.idContasReceber.eq(contasReceberBoleto.codigoContasReceber)).notExists()));
 
-        if (!agruparContas) {
-            booleanBuilder.and(contasReceber.programa.eq(TipoProgramaContasReceberEnum.MENSALIDADE.getCodigo()));
-        }
+		if (!agruparContas) {
+			booleanBuilder.and(contasReceber.programa.eq(TipoProgramaContasReceberEnum.MENSALIDADE.getCodigo()));
+		}
 
-        return sqlFrom().where(booleanBuilder).list(contasReceber);
-    }
+		return sqlFrom().where(booleanBuilder).list(contasReceber);
+	}
 
 }

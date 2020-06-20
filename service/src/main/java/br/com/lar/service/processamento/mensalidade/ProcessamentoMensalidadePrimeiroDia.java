@@ -10,19 +10,12 @@ import br.com.lar.repository.dao.MensalidadePacienteDAO;
 import br.com.lar.repository.model.MensalidadePaciente;
 import br.com.lar.service.interfaces.ProcessamentoMensalidade;
 import br.com.sysdesc.util.classes.DateUtil;
-import br.com.sysdesc.util.vo.ConfiguracaoMensalidadeVO;
 
 public class ProcessamentoMensalidadePrimeiroDia implements ProcessamentoMensalidade {
 
 	private MensalidadePacienteDAO mensalidadePacienteDAO = new MensalidadePacienteDAO();
 
 	private ProcessamentoMensalidadePaciente processamentoMensalidadePaciente = new ProcessamentoMensalidadePaciente();
-
-	private ConfiguracaoMensalidadeVO configuracaoMensalidadeVO;
-
-	public ProcessamentoMensalidadePrimeiroDia(ConfiguracaoMensalidadeVO configuracaoMensalidadeVO) {
-		this.configuracaoMensalidadeVO = configuracaoMensalidadeVO;
-	}
 
 	public void processar(Date dataProcessar) {
 
@@ -38,7 +31,7 @@ public class ProcessamentoMensalidadePrimeiroDia implements ProcessamentoMensali
 				for (Entry<Date, List<MensalidadePaciente>> entry : mensalidades.entrySet()) {
 
 					entry.getValue().forEach(mensalidade -> processamentoMensalidadePaciente
-							.gerarMensalidade(configuracaoMensalidadeVO, entry.getKey(), mensalidade));
+							.gerarMensalidade(entry.getKey(), mensalidade));
 				}
 			}
 

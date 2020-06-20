@@ -5,6 +5,8 @@ import static br.com.sysdesc.util.resources.Resources.translate;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import javax.swing.JOptionPane;
 
@@ -18,59 +20,57 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StartUp {
 
-    private final VersaoBancoDados versaoBancoDados = new VersaoBancoDados();
+	private final VersaoBancoDados versaoBancoDados = new VersaoBancoDados();
 
-    private final VersaoInternet versaoInternet = new VersaoInternet();
+	private final VersaoInternet versaoInternet = new VersaoInternet();
 
-    private final ExtratorZip extratorZip = new ExtratorZip();
+	private final ExtratorZip extratorZip = new ExtratorZip();
 
-    public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 
-        StartUp startUp = new StartUp();
+		StartUp startUp = new StartUp();
 
-        File arquivoVersao = new File(Configuracoes.VERSAO);
+		File arquivoVersao = new File(Configuracoes.VERSAO);
 
-        startUp.escolherAtualizacao(arquivoVersao);
+		startUp.escolherAtualizacao(arquivoVersao);
 
-        startUp.iniciarAplicacao();
+		startUp.iniciarAplicacao();
 
-        System.exit(0);
+		System.exit(0);
 
-    }
+	}
 
-    private void escolherAtualizacao(File arquivoVersao) throws Exception {
+	private void escolherAtualizacao(File arquivoVersao) throws IOException {
 
-        VersaoERPVO versaoVO = versaoInternet.obterVersaoVO(arquivoVersao);
+		VersaoERPVO versaoVO = versaoInternet.obterVersaoVO(arquivoVersao);
 
-        String versaoBanco = versaoBancoDados.buscarVersaoBanco();
+		String versaoBanco = versaoBancoDados.buscarVersaoBanco();
 
-        if (!versaoBanco.equals(versaoVO.getVersaoERP())) {
+		if (!versaoBanco.equals(versaoVO.getVersaoERP())) {
 
-            File arquivoZip = versaoInternet.obterArquivoVersaoZip(versaoVO);
+			File arquivoZip = versaoInternet.obterArquivoVersaoZip(versaoVO);
 
-            extratorZip.extrairVersao(arquivoZip);
+			extratorZip.extrairVersao(arquivoZip);
 
-            versaoBancoDados.upgradeDatabase(versaoVO.getVersaoERP());
+			versaoBancoDados.upgradeDatabase(versaoVO.getVersaoERP());
 
-            if (arquivoZip.exists()) {
-                arquivoZip.delete();
-            }
-        }
+			Files.deleteIfExists(arquivoZip.toPath());
+		}
 
-    }
+	}
 
-    private void iniciarAplicacao() {
+	private void iniciarAplicacao() {
 
-        try {
+		try {
 
-            Desktop.getDesktop().open(new File(translate(APPLICATION_JAR, "interface.jar")));
+			Desktop.getDesktop().open(new File(translate(APPLICATION_JAR, "interface.jar")));
 
-        } catch (Exception e) {
+		} catch (Exception e) {
 
-            JOptionPane.showMessageDialog(null, "ERRO AO INICIALIZAR APLICAÇÃO");
+			JOptionPane.showMessageDialog(null, "ERRO AO INICIALIZAR APLICAÇÃO");
 
-            log.error("ERRO AO INICIALIZAR APLICAÇÃO", e);
-        }
-    }
+			log.error("ERRO AO INICIALIZAR APLICAÇÃO", e);
+		}
+	}
 
 }

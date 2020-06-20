@@ -4,6 +4,9 @@ import java.io.File;
 
 public class Configuracoes {
 
+	private Configuracoes() {
+	}
+
 	public static final String USER_DIR = System.getProperty("user.dir");
 	public static final String SEPARATOR = File.separator;
 

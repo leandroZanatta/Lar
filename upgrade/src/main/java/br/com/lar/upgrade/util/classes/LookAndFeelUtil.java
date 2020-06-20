@@ -9,6 +9,9 @@ import com.jtattoo.plaf.mint.MintLookAndFeel;
 
 public class LookAndFeelUtil {
 
+	private LookAndFeelUtil() {
+	}
+
 	public static void configureLayout() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException {
 		configureLayout("Times New Roman plain 14");

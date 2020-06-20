@@ -12,6 +12,9 @@ import br.com.lar.upgrade.util.resources.Configuracoes;
 
 public class ImageUtil {
 
+	private ImageUtil() {
+	}
+
 	public static ImageIcon resize(String source, Integer width, Integer height) {
 
 		try {

@@ -22,10 +22,10 @@ public class ProcessamentoMensalidadeFactory {
 			return new ProcessamentoMensalidadeDiaFixo(configuracaoMensalidadeVO);
 
 		case PRIMEIRO_DIA:
-			return new ProcessamentoMensalidadePrimeiroDia(configuracaoMensalidadeVO);
+			return new ProcessamentoMensalidadePrimeiroDia();
 
 		case ULTIMO_DIA:
-			return new ProcessamentoMensalidadeUltimoDia(configuracaoMensalidadeVO);
+			return new ProcessamentoMensalidadeUltimoDia();
 		case BASE_MENSALIDADE:
 			return new ProcessamentoMensalidadeBaseVencimento(configuracaoMensalidadeVO);
 

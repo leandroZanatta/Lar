@@ -85,7 +85,7 @@ public class FrmCadastroPesquisa extends AbstractInternalFrame {
 		txPaginacao = new JNumericField();
 		txCodigo = new JNumericField();
 		txDescricao = new JTextFieldMaiusculo();
-		cbPesquisa = new JComboBox<PesquisaEnum>();
+		cbPesquisa = new JComboBox<>();
 		btAdd = new JButton("");
 		btRemove = new JButton("");
 		tabela = new JTable(projectionsTableModel);
@@ -123,6 +123,7 @@ public class FrmCadastroPesquisa extends AbstractInternalFrame {
 
 		tabela.addMouseListener(new MouseAdapter() {
 
+			@Override
 			public void mousePressed(MouseEvent mouseEvent) {
 
 				JTable table = (JTable) mouseEvent.getSource();

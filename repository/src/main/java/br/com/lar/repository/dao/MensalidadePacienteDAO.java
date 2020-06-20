@@ -17,67 +17,67 @@ import br.com.sysdesc.pesquisa.repository.dao.impl.PesquisableDAOImpl;
 
 public class MensalidadePacienteDAO extends PesquisableDAOImpl<MensalidadePaciente> {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public MensalidadePacienteDAO() {
-        super(mensalidadePaciente, mensalidadePaciente.codigoPaciente);
-    }
+	public MensalidadePacienteDAO() {
+		super(mensalidadePaciente, mensalidadePaciente.codigoPaciente);
+	}
 
-    public List<MensalidadePaciente> obterMensalidadesDiaVencimento(Long diaMes, boolean isUltimoDiaMes) {
+	public List<MensalidadePaciente> obterMensalidadesDiaVencimento(Long diaMes, boolean isUltimoDiaMes) {
 
-        JPAQuery query = from();
+		JPAQuery query = from();
 
-        query.where(getDiaMensalidade(diaMes, isUltimoDiaMes));
+		query.where(getDiaMensalidade(diaMes, isUltimoDiaMes));
 
-        return query.list(mensalidadePaciente);
-    }
+		return query.list(mensalidadePaciente);
+	}
 
-    private Predicate getDiaMensalidade(Long diaMes, boolean isUltimoDiaMes) {
+	private Predicate getDiaMensalidade(Long diaMes, boolean isUltimoDiaMes) {
 
-        if (isUltimoDiaMes) {
+		if (isUltimoDiaMes) {
 
-            return new BooleanBuilder(mensalidadePaciente.diaVencimento.goe(diaMes));
-        }
+			return new BooleanBuilder(mensalidadePaciente.diaVencimento.goe(diaMes));
+		}
 
-        return new BooleanBuilder(mensalidadePaciente.diaVencimento.eq(diaMes));
-    }
+		return new BooleanBuilder(mensalidadePaciente.diaVencimento.eq(diaMes));
+	}
 
-    public List<MensalidadePaciente> buscarMensalidadePorTipoPagamento(Long codigo) {
+	public List<MensalidadePaciente> buscarMensalidadePorTipoPagamento(Long codigo) {
 
-        return from().where(mensalidadePaciente.formasPagamento.codigoFormaPagamento.eq(codigo)).list(mensalidadePaciente);
-    }
+		return from().where(mensalidadePaciente.formasPagamento.codigoFormaPagamento.eq(codigo)).list(mensalidadePaciente);
+	}
 
-    public List<MensalidadePaciente> buscarInconsistenciasBoletoPrimeiroDia() {
+	public List<MensalidadePaciente> buscarInconsistenciasBoletoPrimeiroDia() {
 
-        return from().where(
-                mensalidadePaciente.envioAutomaticoBoletos.eq(true).and(mensalidadePaciente.diasAntecedencia.gt(mensalidadePaciente.diaVencimento)))
-                .list(mensalidadePaciente);
-    }
+		return from().where(
+				mensalidadePaciente.envioAutomaticoBoletos.eq(true).and(mensalidadePaciente.diasAntecedencia.gt(mensalidadePaciente.diaVencimento)))
+				.list(mensalidadePaciente);
+	}
 
-    public List<MensalidadePaciente> buscarInconsistenciasBoletoUltimoDia() {
+	public List<MensalidadePaciente> buscarInconsistenciasBoletoUltimoDia() {
 
-        return from().where(mensalidadePaciente.envioAutomaticoBoletos.eq(true)
-                .and(mensalidadePaciente.diasAntecedencia.gt(mensalidadePaciente.diaVencimento.add(1L)))).list(mensalidadePaciente);
-    }
+		return from().where(mensalidadePaciente.envioAutomaticoBoletos.eq(true)
+				.and(mensalidadePaciente.diasAntecedencia.gt(mensalidadePaciente.diaVencimento.add(1L)))).list(mensalidadePaciente);
+	}
 
-    public List<MensalidadePaciente> buscarInconsistenciasDiaFixo(Long diaFixo) {
+	public List<MensalidadePaciente> buscarInconsistenciasDiaFixo() {
 
-        NumberExpression<Long> operation = NumberOperation.create(Long.class, Ops.ADD,
-                NumberOperation.create(Long.class, Ops.SUB, ConstantImpl.create(28L), mensalidadePaciente.diaVencimento),
-                mensalidadePaciente.diasAntecedencia);
+		NumberExpression<Long> operation = NumberOperation.create(Long.class, Ops.ADD,
+				NumberOperation.create(Long.class, Ops.SUB, ConstantImpl.create(28L), mensalidadePaciente.diaVencimento),
+				mensalidadePaciente.diasAntecedencia);
 
-        return from().where(mensalidadePaciente.envioAutomaticoBoletos.eq(true).and(mensalidadePaciente.diasAntecedencia.gt(operation)))
-                .list(mensalidadePaciente);
-    }
+		return from().where(mensalidadePaciente.envioAutomaticoBoletos.eq(true).and(mensalidadePaciente.diasAntecedencia.gt(operation)))
+				.list(mensalidadePaciente);
+	}
 
-    public List<MensalidadePaciente> buscarInconsistenciasBaseMensalidade(Long diaFixo) {
-        return from().where(mensalidadePaciente.envioAutomaticoBoletos.eq(true).and(mensalidadePaciente.diasAntecedencia.gt(diaFixo)))
-                .list(mensalidadePaciente);
-    }
+	public List<MensalidadePaciente> buscarInconsistenciasBaseMensalidade(Long diaFixo) {
+		return from().where(mensalidadePaciente.envioAutomaticoBoletos.eq(true).and(mensalidadePaciente.diasAntecedencia.gt(diaFixo)))
+				.list(mensalidadePaciente);
+	}
 
-    public List<MensalidadePaciente> buscarMensalidadesPorBoleto() {
+	public List<MensalidadePaciente> buscarMensalidadesPorBoleto() {
 
-        return from().where(mensalidadePaciente.envioAutomaticoBoletos.eq(true)).list(mensalidadePaciente);
-    }
+		return from().where(mensalidadePaciente.envioAutomaticoBoletos.eq(true)).list(mensalidadePaciente);
+	}
 
 }

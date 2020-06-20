@@ -58,13 +58,6 @@ public class FrmConexao extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-	private JLabel lblBancoDeDados;
-	private JLabel lblUrl;
-	private JLabel lblPorta;
-	private JLabel lblUsuario;
-	private JLabel lblSenha;
-	private JLabel lblBanco;
-	private JPanel panel;
 	private JTextField txUrl;
 	private JTextField txPorta;
 	private JTextField txUsuario;
@@ -72,7 +65,6 @@ public class FrmConexao extends JDialog {
 	private JComboBox<TipoConexaoEnum> cbTipoBanco;
 	private JComboBox<String> cbBanco;
 	private JButton btnSalvar;
-	private JButton btnCancelar;
 	private JButton btnPesquisa;
 	private String arquivoConfiguracao;
 
@@ -88,14 +80,14 @@ public class FrmConexao extends JDialog {
 		setUndecorated(Boolean.TRUE);
 		getContentPane().setLayout(new BorderLayout());
 
-		panel = new JPanel();
+		JPanel panel = new JPanel();
 
-		lblBancoDeDados = new JLabel(translate(FRMCONEXAO_LB_TIPOBANCO));
-		lblUrl = new JLabel(translate(FRMCONEXAO_LB_URL));
-		lblPorta = new JLabel(translate(FRMCONEXAO_LB_PORTA));
-		lblUsuario = new JLabel(translate(FRMCONEXAO_LB_USUARIO));
-		lblSenha = new JLabel(translate(FRMCONEXAO_LB_SENHA));
-		lblBanco = new JLabel(translate(FRMCONEXAO_LB_BANCO));
+		JLabel lblBancoDeDados = new JLabel(translate(FRMCONEXAO_LB_TIPOBANCO));
+		JLabel lblUrl = new JLabel(translate(FRMCONEXAO_LB_URL));
+		JLabel lblPorta = new JLabel(translate(FRMCONEXAO_LB_PORTA));
+		JLabel lblUsuario = new JLabel(translate(FRMCONEXAO_LB_USUARIO));
+		JLabel lblSenha = new JLabel(translate(FRMCONEXAO_LB_SENHA));
+		JLabel lblBanco = new JLabel(translate(FRMCONEXAO_LB_BANCO));
 
 		cbTipoBanco = new JComboBox<>(TipoConexaoEnum.values());
 		cbBanco = new JComboBox<>();
@@ -105,7 +97,7 @@ public class FrmConexao extends JDialog {
 		txSenha = new JPasswordField();
 
 		btnSalvar = new JButton(translate(FRMCONEXAO_BT_SALVAR));
-		btnCancelar = new JButton(translate(FRMCONEXAO_BT_CANCELAR));
+		JButton btnCancelar = new JButton(translate(FRMCONEXAO_BT_CANCELAR));
 		btnPesquisa = new JButton("");
 
 		cbTipoBanco.addItemListener(e -> selecionouBanco());
@@ -258,7 +250,7 @@ public class FrmConexao extends JDialog {
 
 		String url = STRING_VAZIA;
 		String porta = STRING_VAZIA;
-		Boolean selecionou = cbTipoBanco.getSelectedIndex() >= 0;
+		boolean selecionou = cbTipoBanco.getSelectedIndex() >= 0;
 
 		TipoConexaoEnum tipoConexaoEnum = null;
 
@@ -268,7 +260,7 @@ public class FrmConexao extends JDialog {
 			porta = tipoConexaoEnum.getPorta().toString();
 		}
 
-		Boolean conexaoH2 = tipoConexaoEnum != null && tipoConexaoEnum.equals(TipoConexaoEnum.H2);
+		boolean conexaoH2 = tipoConexaoEnum != null && tipoConexaoEnum.equals(TipoConexaoEnum.H2);
 
 		txUrl.setEnabled(selecionou);
 		txPorta.setEnabled(selecionou && !conexaoH2);

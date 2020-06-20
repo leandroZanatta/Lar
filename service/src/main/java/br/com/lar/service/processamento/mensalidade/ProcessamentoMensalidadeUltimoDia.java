@@ -10,48 +10,41 @@ import br.com.lar.repository.dao.MensalidadePacienteDAO;
 import br.com.lar.repository.model.MensalidadePaciente;
 import br.com.lar.service.interfaces.ProcessamentoMensalidade;
 import br.com.sysdesc.util.classes.DateUtil;
-import br.com.sysdesc.util.vo.ConfiguracaoMensalidadeVO;
 
 public class ProcessamentoMensalidadeUltimoDia implements ProcessamentoMensalidade {
 
-    private MensalidadePacienteDAO mensalidadePacienteDAO = new MensalidadePacienteDAO();
+	private MensalidadePacienteDAO mensalidadePacienteDAO = new MensalidadePacienteDAO();
 
-    private ProcessamentoMensalidadePaciente processamentoMensalidadePaciente = new ProcessamentoMensalidadePaciente();
+	private ProcessamentoMensalidadePaciente processamentoMensalidadePaciente = new ProcessamentoMensalidadePaciente();
 
-    private ConfiguracaoMensalidadeVO configuracaoMensalidadeVO;
+	public void processar(Date dataProcessar) {
 
-    public ProcessamentoMensalidadeUltimoDia(ConfiguracaoMensalidadeVO configuracaoMensalidadeVO) {
-        this.configuracaoMensalidadeVO = configuracaoMensalidadeVO;
-    }
+		if (DateUtil.isLastDayOfMonth(dataProcessar)) {
 
-    public void processar(Date dataProcessar) {
+			List<MensalidadePaciente> mensalidadePacientes = mensalidadePacienteDAO.listar();
 
-        if (DateUtil.isLastDayOfMonth(dataProcessar)) {
+			Date proximoMes = DateUtil.addDays(dataProcessar, 1L);
 
-            List<MensalidadePaciente> mensalidadePacientes = mensalidadePacienteDAO.listar();
+			Map<Date, List<MensalidadePaciente>> mapaMensalidades = mensalidadePacientes.stream()
+					.collect(Collectors.groupingBy(mensalidade -> dataMensalidade(proximoMes, mensalidade)));
 
-            Date proximoMes = DateUtil.addDays(dataProcessar, 1L);
+			if (!mapaMensalidades.isEmpty()) {
 
-            Map<Date, List<MensalidadePaciente>> mapaMensalidades = mensalidadePacientes.stream()
-                    .collect(Collectors.groupingBy(mensalidade -> dataMensalidade(proximoMes, mensalidade)));
+				for (Entry<Date, List<MensalidadePaciente>> entry : mapaMensalidades.entrySet()) {
 
-            if (!mapaMensalidades.isEmpty()) {
+					entry.getValue().forEach(
+							mensalidade -> processamentoMensalidadePaciente.gerarMensalidade(entry.getKey(), mensalidade));
+				}
+			}
 
-                for (Entry<Date, List<MensalidadePaciente>> entry : mapaMensalidades.entrySet()) {
+		}
+	}
 
-                    entry.getValue().forEach(
-                            mensalidade -> processamentoMensalidadePaciente.gerarMensalidade(configuracaoMensalidadeVO, entry.getKey(), mensalidade));
-                }
-            }
+	private Date dataMensalidade(Date dataProcessar, MensalidadePaciente mensalidade) {
 
-        }
-    }
+		Long ultimoDiaMes = DateUtil.getLastDayOfMonth(dataProcessar).longValue();
+		Long diaVencimento = ultimoDiaMes < mensalidade.getDiaVencimento() ? ultimoDiaMes : mensalidade.getDiaVencimento();
 
-    private Date dataMensalidade(Date dataProcessar, MensalidadePaciente mensalidade) {
-
-        Long ultimoDiaMes = DateUtil.getLastDayOfMonth(dataProcessar).longValue();
-        Long diaVencimento = ultimoDiaMes < mensalidade.getDiaVencimento() ? ultimoDiaMes : mensalidade.getDiaVencimento();
-
-        return DateUtil.setDay(dataProcessar, diaVencimento);
-    }
+		return DateUtil.setDay(dataProcessar, diaVencimento);
+	}
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -11,26 +12,23 @@ public class ZipService {
 
 	private byte[] buffer = new byte[1024];
 
-	public void createZip(File pathDir, String zipFile, File... files) throws Exception {
+	public void createZip(File pathDir, String zipFile, File... files) throws IOException {
 
 		File arquivoZip = new File(pathDir, zipFile);
 
-		if (arquivoZip.exists()) {
-			arquivoZip.delete();
-		}
+		Files.deleteIfExists(arquivoZip.toPath());
 
 		arquivoZip.createNewFile();
 
-		ZipOutputStream zipOuputStream = new ZipOutputStream(new FileOutputStream(arquivoZip));
+		try (ZipOutputStream zipOuputStream = new ZipOutputStream(new FileOutputStream(arquivoZip))) {
 
-		for (File arquivo : files) {
+			for (File arquivo : files) {
 
-			zipFile("", arquivo, zipOuputStream);
+				zipFile("", arquivo, zipOuputStream);
+			}
+
+			zipOuputStream.closeEntry();
 		}
-
-		zipOuputStream.closeEntry();
-
-		zipOuputStream.close();
 	}
 
 	private void zipFile(String path, File file, ZipOutputStream zipFile) throws IOException {
@@ -60,7 +58,6 @@ public class ZipService {
 		}
 
 		zipFile.closeEntry();
-
 	}
 
 }
