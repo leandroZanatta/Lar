@@ -29,26 +29,26 @@
 		<class>br.com.lar.repository.model.ProcessamentoDiario</class>
 		<class>br.com.lar.repository.model.ContasReceber</class>
 		<class>br.com.lar.repository.model.CobrancaMensalidade</class>
-		<class>br.com.sysdesc.boleto.repository.model.Banco</class>
-		<class>br.com.sysdesc.boleto.repository.model.ConfiguracaoBoleto</class>
-		<class>br.com.sysdesc.boleto.repository.model.Boleto</class>
+		<class>br.com.sysdesc.boletos.repository.model.Banco</class>
+		<class>br.com.sysdesc.boletos.repository.model.ConfiguracaoBoleto</class>
+		<class>br.com.sysdesc.boletos.repository.model.Boleto</class>
 		<class>br.com.sysdesc.pesquisa.repository.model.Usuario</class>
 		<class>br.com.sysdesc.pesquisa.repository.model.Perfil</class>
 		<class>br.com.sysdesc.pesquisa.repository.model.PerfilUsuario</class>
 		<class>br.com.lar.repository.model.ContasReceberBoleto</class>
-		<class>br.com.sysdesc.boleto.repository.model.BoletoDadosCliente</class>
-		<class>br.com.sysdesc.boleto.repository.model.BoletoDadosPagamento</class>
-		<class>br.com.sysdesc.boleto.repository.model.BoletoDadosSacadorAvalista</class>
-		<class>br.com.sysdesc.boleto.repository.model.Remessa</class>
-		<class>br.com.sysdesc.boleto.repository.model.ConfiguracaoRemessa</class>
-		<class>br.com.sysdesc.boleto.repository.model.RemessaBoleto</class>
-		<class>br.com.sysdesc.boleto.repository.model.pk.RemessaBoletoPk</class>
+		<class>br.com.sysdesc.boletos.repository.model.BoletoDadosCliente</class>
+		<class>br.com.sysdesc.boletos.repository.model.BoletoDadosPagamento</class>
+		<class>br.com.sysdesc.boletos.repository.model.BoletoDadosSacadorAvalista</class>
+		<class>br.com.sysdesc.boletos.repository.model.Remessa</class>
+		<class>br.com.sysdesc.boletos.repository.model.ConfiguracaoRemessa</class>
+		<class>br.com.sysdesc.boletos.repository.model.RemessaBoleto</class>
+		<class>br.com.sysdesc.boletos.repository.model.pk.RemessaBoletoPk</class>
 		<class>br.com.lar.repository.model.Email</class>
 		<class>br.com.lar.repository.model.EmailAnexo</class>
 		<class>br.com.lar.repository.model.EmailBoleto</class>
 		<class>br.com.lar.repository.model.pk.EmailBoletoPk</class>
-		<class>br.com.sysdesc.boleto.repository.model.Retorno</class>
-		<class>br.com.sysdesc.boleto.repository.model.RetornoBoleto</class>
+		<class>br.com.sysdesc.boletos.repository.model.Retorno</class>
+		<class>br.com.sysdesc.boletos.repository.model.RetornoBoleto</class>
 
 	</persistence-unit>
 

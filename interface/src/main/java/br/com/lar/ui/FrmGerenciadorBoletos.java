@@ -28,20 +28,20 @@ import org.apache.commons.io.FileUtils;
 
 import com.toedter.calendar.JDateChooser;
 
-import br.com.boletos.service.factory.RetornoFactory;
 import br.com.lar.repository.dao.EmailDAO;
 import br.com.lar.tablemodels.BoletoRemessaTableModel;
 import br.com.lar.tablemodels.BoletoRetornoTableModel;
 import br.com.lar.tablemodels.RemessaTableModel;
 import br.com.lar.tablemodels.RetornoTableModel;
-import br.com.syscesc.boleto.service.remessa.RemessaService;
-import br.com.syscesc.boleto.service.retorno.RetornoService;
 import br.com.sysdesc.arquivos.exceptions.SysdescArquivosException;
 import br.com.sysdesc.arquivos.util.ListUtil;
-import br.com.sysdesc.boleto.repository.dao.RetornoDAO;
-import br.com.sysdesc.boleto.repository.model.Remessa;
-import br.com.sysdesc.boleto.repository.model.RemessaBoleto;
-import br.com.sysdesc.boleto.repository.model.Retorno;
+import br.com.sysdesc.boletos.repository.dao.RetornoDAO;
+import br.com.sysdesc.boletos.repository.model.Remessa;
+import br.com.sysdesc.boletos.repository.model.RemessaBoleto;
+import br.com.sysdesc.boletos.repository.model.Retorno;
+import br.com.sysdesc.boletos.service.factory.RetornoFactory;
+import br.com.sysdesc.boletos.service.remessa.RemessaService;
+import br.com.sysdesc.boletos.service.retorno.RetornoService;
 import br.com.sysdesc.components.AbstractInternalFrame;
 import br.com.sysdesc.components.ButtonColumn;
 import br.com.sysdesc.components.JNumericField;

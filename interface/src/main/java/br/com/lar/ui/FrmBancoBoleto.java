@@ -19,9 +19,9 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
 
-import br.com.sysdesc.boleto.repository.model.Banco;
-import br.com.sysdesc.boleto.repository.model.ConfiguracaoBoleto;
-import br.com.sysdesc.boleto.service.configuracaoboleto.ConfiguracaoBoletoService;
+import br.com.sysdesc.boletos.repository.model.Banco;
+import br.com.sysdesc.boletos.repository.model.ConfiguracaoBoleto;
+import br.com.sysdesc.boletos.service.configuracaoboleto.ConfiguracaoBoletoService;
 import br.com.sysdesc.boletos.util.enumeradores.TipoMultaJurosEnum;
 import br.com.sysdesc.boletos.util.enumeradores.TipoProtestoEnum;
 import br.com.sysdesc.components.AbstractInternalFrame;

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import br.com.sysdesc.boleto.repository.model.Boleto;
+import br.com.sysdesc.boletos.repository.model.Boleto;
 import br.com.sysdesc.components.AbstractInternalFrameTable;
 import br.com.sysdesc.util.classes.DateUtil;
 import br.com.sysdesc.util.classes.MoneyFormatter;

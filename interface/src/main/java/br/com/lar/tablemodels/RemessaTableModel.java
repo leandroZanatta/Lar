@@ -10,11 +10,11 @@ import javax.swing.event.EventListenerList;
 
 import com.google.common.collect.Lists;
 
-import br.com.syscesc.boleto.service.boleto.BoletoService;
-import br.com.syscesc.boleto.service.remessa.RemessaService;
-import br.com.sysdesc.boleto.repository.model.Boleto;
-import br.com.sysdesc.boleto.repository.model.Remessa;
-import br.com.sysdesc.boleto.repository.model.RemessaBoleto;
+import br.com.sysdesc.boletos.repository.model.Boleto;
+import br.com.sysdesc.boletos.repository.model.Remessa;
+import br.com.sysdesc.boletos.repository.model.RemessaBoleto;
+import br.com.sysdesc.boletos.service.boleto.BoletoService;
+import br.com.sysdesc.boletos.service.remessa.RemessaService;
 import br.com.sysdesc.components.AbstractInternalFrameTable;
 import br.com.sysdesc.util.classes.DateUtil;
 import br.com.sysdesc.util.classes.NumericFormatter;

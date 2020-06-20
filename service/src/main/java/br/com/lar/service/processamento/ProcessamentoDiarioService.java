@@ -14,7 +14,7 @@ import br.com.lar.repository.model.Parametros;
 import br.com.lar.repository.model.ProcessamentoDiario;
 import br.com.lar.service.email.EmailService;
 import br.com.lar.service.factory.ProcessamentoMensalidadeFactory;
-import br.com.syscesc.boleto.service.remessa.RemessaService;
+import br.com.sysdesc.boletos.service.remessa.RemessaService;
 import br.com.sysdesc.util.classes.CryptoUtil;
 import br.com.sysdesc.util.constants.MensagemConstants;
 import br.com.sysdesc.util.enumeradores.ProcessamentoDiarioEnum;

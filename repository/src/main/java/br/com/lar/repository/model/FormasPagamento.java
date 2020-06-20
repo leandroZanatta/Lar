@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import br.com.sysdesc.boleto.repository.model.Banco;
+import br.com.sysdesc.boletos.repository.model.Banco;
 import lombok.Data;
 
 @Data

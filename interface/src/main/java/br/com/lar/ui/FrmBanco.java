@@ -16,8 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
 import br.com.lar.ui.buttonactions.ButtonActionBoleto;
-import br.com.syscesc.boleto.service.banco.BancoService;
-import br.com.sysdesc.boleto.repository.model.Banco;
+import br.com.sysdesc.boletos.repository.model.Banco;
+import br.com.sysdesc.boletos.service.banco.BancoService;
 import br.com.sysdesc.components.AbstractInternalFrame;
 import br.com.sysdesc.components.JTextFieldId;
 import br.com.sysdesc.pesquisa.ui.components.PanelActions;

@@ -26,7 +26,7 @@ import br.com.lar.repository.model.Email;
 import br.com.lar.repository.model.EmailAnexo;
 import br.com.lar.repository.model.EmailBoleto;
 import br.com.lar.repository.model.Paciente;
-import br.com.sysdesc.boleto.repository.model.Boleto;
+import br.com.sysdesc.boletos.repository.model.Boleto;
 import br.com.sysdesc.util.classes.DateUtil;
 import br.com.sysdesc.util.classes.ListUtil;
 import br.com.sysdesc.util.classes.StringUtil;

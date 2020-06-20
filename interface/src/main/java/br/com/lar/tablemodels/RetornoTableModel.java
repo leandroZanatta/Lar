@@ -7,7 +7,7 @@ import javax.swing.event.EventListenerList;
 
 import com.google.common.collect.Lists;
 
-import br.com.sysdesc.boleto.repository.model.Retorno;
+import br.com.sysdesc.boletos.repository.model.Retorno;
 import br.com.sysdesc.components.AbstractInternalFrameTable;
 import br.com.sysdesc.util.classes.DateUtil;
 import br.com.sysdesc.util.classes.NumericFormatter;

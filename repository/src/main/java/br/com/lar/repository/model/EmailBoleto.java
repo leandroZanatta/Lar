@@ -12,7 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import br.com.lar.repository.model.pk.EmailBoletoPk;
-import br.com.sysdesc.boleto.repository.model.Boleto;
+import br.com.sysdesc.boletos.repository.model.Boleto;
 import lombok.Getter;
 import lombok.Setter;
 
