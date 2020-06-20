@@ -107,8 +107,7 @@ public class FrmCadastroImagemPaciente extends JDialog {
 
 				BufferedImage bufferedImage = cortarImagem.getImagemCortada();
 
-				byte[] imagem = ImageUtil.resizeToBytes(bufferedImage, FilenameUtils.getExtension(txArquivo.getText()),
-						bufferedImage.getWidth(), bufferedImage.getHeight());
+				byte[] imagem = ImageUtil.resizeToBytes(bufferedImage, FilenameUtils.getExtension(txArquivo.getText()));
 
 				ImagemPaciente imagemPaciente = new ImagemPaciente();
 				imagemPaciente.setAltura(100L);

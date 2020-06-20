@@ -36,10 +36,10 @@ public class GeracaoBaseVazia {
 
 		Properties propertiesConexao = Conexao.buscarPropertiesConexao(new File(configuracao));
 
-		String clazz = propertiesConexao.getProperty(TipoConexaoEnum.jdbcDriver);
-		String url = propertiesConexao.getProperty(TipoConexaoEnum.jdbcUrl);
-		String usuario = propertiesConexao.getProperty(TipoConexaoEnum.jdbcUser);
-		String senha = propertiesConexao.getProperty(TipoConexaoEnum.jdbcPassword);
+		String clazz = propertiesConexao.getProperty(TipoConexaoEnum.JDBCDRIVER);
+		String url = propertiesConexao.getProperty(TipoConexaoEnum.JDBCURL);
+		String usuario = propertiesConexao.getProperty(TipoConexaoEnum.JDBCUSER);
+		String senha = propertiesConexao.getProperty(TipoConexaoEnum.JDBCPASSWORD);
 
 		Class.forName(clazz);
 
