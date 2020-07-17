@@ -70,7 +70,8 @@ public class Changelog {
 	private static void deleteFile(File arquivo) {
 
 		try {
-			Files.delete(arquivo.toPath());
+
+			Files.deleteIfExists(arquivo.toPath());
 
 		} catch (IOException e) {
 

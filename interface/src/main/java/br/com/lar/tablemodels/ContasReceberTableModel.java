@@ -22,9 +22,8 @@ public class ContasReceberTableModel extends AbstractInternalFrameTable {
 	public ContasReceberTableModel() {
 
 		colunas.add("Código");
-		colunas.add("Forma Pagamento");
+		colunas.add("Cliente");
 		colunas.add("Vencimento");
-		colunas.add("Programa");
 		colunas.add("Valor");
 		colunas.add("Acréscimo");
 		colunas.add("Desconto");
@@ -53,30 +52,27 @@ public class ContasReceberTableModel extends AbstractInternalFrameTable {
 			return codigoContasReceberFormat.format(contasReceber.getIdContasReceber());
 
 		case 1:
-			return contasReceber.getFormasPagamento().getDescricao();
+			return contasReceber.getCliente().getNome();
 
 		case 2:
 			return DateUtil.format(DateUtil.FORMATO_DD_MM_YYY, contasReceber.getDataVencimento());
 
 		case 3:
-			return contasReceber.getPrograma();
-
-		case 4:
 			return numberFormat.format(contasReceber.getValorParcela());
 
-		case 5:
+		case 4:
 			return numberFormat.format(contasReceber.getValorAcrescimo());
 
-		case 6:
+		case 5:
 			return numberFormat.format(contasReceber.getValorDesconto());
 
-		case 7:
+		case 6:
 			return numberFormat.format(contasReceber.getValorPago());
 
-		case 8:
+		case 7:
 			return contasReceber.isBaixado() ? "Sim" : "Não";
 
-		case 9:
+		case 8:
 			return TipoStatusEnum.findByCodigo(contasReceber.getCodigoStatus()).getDescricao();
 
 		default:

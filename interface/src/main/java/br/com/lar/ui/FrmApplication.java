@@ -46,17 +46,10 @@ public class FrmApplication extends JFrame {
 
 	private static Usuario usuario;
 	private static FrmApplication frmApplication;
-	private JPanel contentPane;
 	private JLabel lbUsuario;
 	private JMenuBar menuBar;
 	private JDesktopPane desktopPane;
 	private JToolBar toolBar;
-	private JPanel panel;
-	private JPanel panel_3;
-	private JLabel lbHorario;
-	private JPanel panel_1;
-	private JPanel panel_2;
-	private JPanel panel_4;
 	private ServidorThread servidorThread;
 
 	public FrmApplication() {
@@ -66,11 +59,11 @@ public class FrmApplication extends JFrame {
 
 	private void initComponents() {
 
-		contentPane = new JPanel();
+		JPanel contentPane = new JPanel();
 		menuBar = new JMenuBar();
 		desktopPane = new JDesktopPane();
 		toolBar = new JToolBar();
-		panel = new JPanel();
+		JPanel panel = new JPanel();
 
 		contentPane.setLayout(new BorderLayout(0, 0));
 
@@ -79,20 +72,20 @@ public class FrmApplication extends JFrame {
 		contentPane.add(toolBar, BorderLayout.NORTH);
 		panel.setLayout(new MigLayout("", "[grow][][][]", "[]"));
 
-		panel_1 = new JPanel();
+		JPanel panel_1 = new JPanel();
 		panel.add(panel_1, "cell 0 0,alignx left,aligny center");
 		lbUsuario = new JLabel();
 		panel_1.add(lbUsuario);
 
-		panel_3 = new JPanel();
+		JPanel panel_3 = new JPanel();
 		panel.add(panel_3, "cell 1 0,alignx center");
 
-		panel_2 = new JPanel();
+		JPanel panel_2 = new JPanel();
 		panel.add(panel_2, "cell 2 0,alignx center");
 
-		panel_4 = new JPanel();
+		JPanel panel_4 = new JPanel();
 		panel.add(panel_4, "cell 3 0,alignx right");
-		lbHorario = new JLabel();
+		JLabel lbHorario = new JLabel();
 		panel_4.add(lbHorario);
 
 		TimerThread timerThread = new TimerThread(lbHorario);
@@ -245,7 +238,7 @@ public class FrmApplication extends JFrame {
 				menu.getProgramas().sort(Comparator.comparing(Programa::getOrdem));
 
 				if (!StringUtil.isNullOrEmpty(menu.getIcone())) {
-					submenu.setIcon(ImageUtil.resize(menu.getIcone(), 20, 20));
+					submenu.setIcon(ImageUtil.resize(menu.getIcone(), 25, 25));
 				}
 
 				menu.getProgramas().forEach(programa -> createSubMenus(submenu, programa));

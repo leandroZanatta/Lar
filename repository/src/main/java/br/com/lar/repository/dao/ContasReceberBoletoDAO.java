@@ -2,6 +2,8 @@ package br.com.lar.repository.dao;
 
 import static br.com.lar.repository.model.QContasReceberBoleto.contasReceberBoleto;
 
+import java.util.List;
+
 import br.com.lar.repository.model.ContasReceberBoleto;
 import br.com.sysdesc.util.dao.AbstractGenericDAO;
 
@@ -11,6 +13,10 @@ public class ContasReceberBoletoDAO extends AbstractGenericDAO<ContasReceberBole
 
 	public ContasReceberBoletoDAO() {
 		super(contasReceberBoleto, contasReceberBoleto.codigoBoleto);
+	}
+
+	public List<ContasReceberBoleto> buscarContasReceberBoleto(Long codigoBoleto) {
+		return from().where(contasReceberBoleto.codigoBoleto.eq(codigoBoleto)).list(contasReceberBoleto);
 	}
 
 }

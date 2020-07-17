@@ -13,28 +13,28 @@ import br.com.sysdesc.util.enumeradores.TipoEnvioEmailEnum;
 
 public class EmailDAO extends PesquisableDAOImpl<Email> {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public EmailDAO() {
-        super(email, email.idEmail);
-    }
+	public EmailDAO() {
+		super(email, email.idEmail);
+	}
 
-    public List<Email> buscarEmailsEnviar() {
+	public List<Email> buscarEmailsEnviar() {
 
-        return from().where(email.codigoStatus.eq(TipoEnvioEmailEnum.AGUARDANDO.getCodigo())).list(email);
-    }
+		return from().where(email.codigoStatus.eq(TipoEnvioEmailEnum.AGUARDANDO.getCodigo())).list(email);
+	}
 
-    public void marcarBoletosParaEnvio(List<Long> codigoBoletos) {
+	public void marcarBoletoParaEnvio(Long codigoBoleto) {
 
-        getEntityManager().getTransaction().begin();
+		getEntityManager().getTransaction().begin();
 
-        new JPAUpdateClause(getEntityManager(), email).set(email.codigoStatus, TipoEnvioEmailEnum.AGUARDANDO.getCodigo())
-                .where(email.codigoStatus.eq(TipoEnvioEmailEnum.PENDENTE.getCodigo())
-                        .and(subQuery().from(emailBoleto)
-                                .where(email.idEmail.eq(emailBoleto.id.codigoEmail).and(emailBoleto.id.codigoBoleto.in(codigoBoletos))).exists()))
-                .execute();
+		new JPAUpdateClause(getEntityManager(), email).set(email.codigoStatus, TipoEnvioEmailEnum.AGUARDANDO.getCodigo())
+				.where(email.codigoStatus.eq(TipoEnvioEmailEnum.PENDENTE.getCodigo())
+						.and(subQuery().from(emailBoleto)
+								.where(email.idEmail.eq(emailBoleto.id.codigoEmail).and(emailBoleto.id.codigoBoleto.eq(codigoBoleto))).exists()))
+				.execute();
 
-        getEntityManager().getTransaction().commit();
-    }
+		getEntityManager().getTransaction().commit();
+	}
 
 }

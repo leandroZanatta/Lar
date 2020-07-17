@@ -377,14 +377,13 @@ public class FrmConsultarContasReceber extends AbstractInternalFrame {
 		setTitle("CONSULTAR CONTAS Á RECEBER");
 
 		table.getColumnModel().getColumn(0).setPreferredWidth(60);
-		table.getColumnModel().getColumn(1).setPreferredWidth(180);
+		table.getColumnModel().getColumn(1).setPreferredWidth(250);
 		table.getColumnModel().getColumn(2).setPreferredWidth(90);
-		table.getColumnModel().getColumn(3).setPreferredWidth(70);
-		table.getColumnModel().getColumn(4).setPreferredWidth(100);
+		table.getColumnModel().getColumn(3).setPreferredWidth(100);
+		table.getColumnModel().getColumn(4).setPreferredWidth(90);
 		table.getColumnModel().getColumn(5).setPreferredWidth(90);
-		table.getColumnModel().getColumn(6).setPreferredWidth(90);
-		table.getColumnModel().getColumn(7).setPreferredWidth(100);
+		table.getColumnModel().getColumn(6).setPreferredWidth(100);
+		table.getColumnModel().getColumn(7).setPreferredWidth(60);
 		table.getColumnModel().getColumn(8).setPreferredWidth(60);
-		table.getColumnModel().getColumn(9).setPreferredWidth(60);
 	}
 }

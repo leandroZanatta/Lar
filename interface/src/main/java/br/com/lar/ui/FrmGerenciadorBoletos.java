@@ -6,9 +6,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.swing.JButton;
@@ -28,18 +26,15 @@ import org.apache.commons.io.FileUtils;
 
 import com.toedter.calendar.JDateChooser;
 
-import br.com.lar.repository.dao.EmailDAO;
+import br.com.lar.service.boleto.RetornoBoletoService;
 import br.com.lar.tablemodels.BoletoRemessaTableModel;
 import br.com.lar.tablemodels.BoletoRetornoTableModel;
 import br.com.lar.tablemodels.RemessaTableModel;
 import br.com.lar.tablemodels.RetornoTableModel;
 import br.com.sysdesc.arquivos.exceptions.SysdescArquivosException;
-import br.com.sysdesc.arquivos.util.ListUtil;
-import br.com.sysdesc.boletos.repository.dao.RetornoDAO;
 import br.com.sysdesc.boletos.repository.model.Remessa;
 import br.com.sysdesc.boletos.repository.model.RemessaBoleto;
 import br.com.sysdesc.boletos.repository.model.Retorno;
-import br.com.sysdesc.boletos.service.factory.RetornoFactory;
 import br.com.sysdesc.boletos.service.remessa.RemessaService;
 import br.com.sysdesc.boletos.service.retorno.RetornoService;
 import br.com.sysdesc.components.AbstractInternalFrame;
@@ -48,7 +43,6 @@ import br.com.sysdesc.components.JNumericField;
 import br.com.sysdesc.components.renders.ComboBoxRenderer;
 import br.com.sysdesc.util.classes.ImageUtil;
 import br.com.sysdesc.util.enumeradores.TipoBancoEnum;
-import br.com.sysdesc.util.enumeradores.TipoRetornoMovimentoTEnum;
 import br.com.sysdesc.util.enumeradores.TipoStatusRemessaEnum;
 import br.com.sysdesc.util.enumeradores.TipoStatusRetornoEnum;
 import br.com.sysdesc.util.exception.SysDescException;
@@ -89,6 +83,7 @@ public class FrmGerenciadorBoletos extends AbstractInternalFrame {
 	private BoletoRetornoTableModel boletoRetornoTableModel = new BoletoRetornoTableModel();
 	private RemessaService remessaService = new RemessaService();
 	private RetornoService retornoService = new RetornoService();
+	private RetornoBoletoService retornoBoletoService = new RetornoBoletoService();
 	private JTabbedPane tabbedPane;
 	private JPanel panelRemessa;
 	private JPanel panelRetorno;
@@ -484,23 +479,8 @@ public class FrmGerenciadorBoletos extends AbstractInternalFrame {
 		if (i != 1) {
 
 			try {
-				File arquivo = fileChooser.getSelectedFile();
 
-				List<String> arquivos = FileUtils.readLines(arquivo, StandardCharsets.UTF_8);
-
-				Retorno retorno = new RetornoFactory().getRetornoBuilder(arquivos).build();
-
-				new RetornoDAO().salvar(retorno);
-
-				List<Long> codigoBoletosConfirmado = retorno.getRetornoBoletos().stream()
-						.filter(retornoBoleto -> retornoBoleto.getTipoRetorno().equals(TipoRetornoMovimentoTEnum.ENTRADA_CONFIRMADA.getCodigo())
-								&& retornoBoleto.getBoleto() != null)
-						.mapToLong(retornoBoleto -> retornoBoleto.getBoleto().getIdBoleto()).boxed().collect(Collectors.toList());
-
-				if (!ListUtil.isNullOrEmpty(codigoBoletosConfirmado)) {
-
-					new EmailDAO().marcarBoletosParaEnvio(codigoBoletosConfirmado);
-				}
+				retornoBoletoService.processarRetorno(fileChooser.getSelectedFile());
 
 				JOptionPane.showMessageDialog(this, "Importação do Retorno realizada com sucesso");
 
@@ -509,6 +489,7 @@ public class FrmGerenciadorBoletos extends AbstractInternalFrame {
 			} catch (SysdescArquivosException | SysDescException e) {
 
 				JOptionPane.showMessageDialog(this, e.getMessage());
+
 			} catch (IOException e) {
 
 				log.error("Ocorreu um erro ao efetuar a leitura do arquivo de retorno", e);

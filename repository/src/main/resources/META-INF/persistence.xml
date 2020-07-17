@@ -49,6 +49,7 @@
 		<class>br.com.lar.repository.model.pk.EmailBoletoPk</class>
 		<class>br.com.sysdesc.boletos.repository.model.Retorno</class>
 		<class>br.com.sysdesc.boletos.repository.model.RetornoBoleto</class>
+		<class>br.com.lar.repository.model.ContasReceberPagamento</class>
 
 	</persistence-unit>
 

@@ -14,51 +14,51 @@ import br.com.sysdesc.util.vo.ValoresContasReceberVO;
 
 public class ContasReceberService extends AbstractPesquisableServiceImpl<ContasReceber> {
 
-    private ContasReceberDAO contasReceberDAO;
+	private ContasReceberDAO contasReceberDAO;
 
-    public ContasReceberService() {
-        this(new ContasReceberDAO());
-    }
+	public ContasReceberService() {
+		this(new ContasReceberDAO());
+	}
 
-    public ContasReceberService(ContasReceberDAO contasReceberDAO) {
-        super(contasReceberDAO, ContasReceber::getIdContasReceber);
+	public ContasReceberService(ContasReceberDAO contasReceberDAO) {
+		super(contasReceberDAO, ContasReceber::getIdContasReceber);
 
-        this.contasReceberDAO = contasReceberDAO;
-    }
+		this.contasReceberDAO = contasReceberDAO;
+	}
 
-    public ContasReceber criarContasReceber(Cliente cliente, FormasPagamento formasPagamento, Date dataVencimento,
-            ValoresContasReceberVO valoresContasReceberVO, String programa) {
+	public ContasReceber criarContasReceber(Cliente cliente, FormasPagamento formasPagamento, Date dataVencimento,
+			ValoresContasReceberVO valoresContasReceberVO, String programa) {
 
-        Date dataCadastro = new Date();
+		Date dataCadastro = new Date();
 
-        ContasReceber contasReceber = new ContasReceber();
-        contasReceber.setCliente(cliente);
-        contasReceber.setFormasPagamento(formasPagamento);
-        contasReceber.setBaixado(false);
-        contasReceber.setDataVencimento(dataVencimento);
-        contasReceber.setCodigoStatus(TipoStatusEnum.ATIVO.getCodigo());
-        contasReceber.setDataCadastro(dataCadastro);
-        contasReceber.setDataManutencao(dataCadastro);
-        contasReceber.setValorAcrescimo(valoresContasReceberVO.getAcrescimo());
-        contasReceber.setValorDesconto(valoresContasReceberVO.getDesconto());
-        contasReceber.setValorJuros(valoresContasReceberVO.getValorJuros());
-        contasReceber.setValorPago(valoresContasReceberVO.getValorPago());
-        contasReceber.setValorParcela(valoresContasReceberVO.getValor());
-        contasReceber.setPrograma(programa);
+		ContasReceber contasReceber = new ContasReceber();
+		contasReceber.setCliente(cliente);
+		contasReceber.setFormasPagamento(formasPagamento);
+		contasReceber.setBaixado(false);
+		contasReceber.setDataVencimento(dataVencimento);
+		contasReceber.setCodigoStatus(TipoStatusEnum.ATIVO.getCodigo());
+		contasReceber.setDataCadastro(dataCadastro);
+		contasReceber.setDataManutencao(dataCadastro);
+		contasReceber.setValorAcrescimo(valoresContasReceberVO.getAcrescimo());
+		contasReceber.setValorDesconto(valoresContasReceberVO.getDesconto());
+		contasReceber.setValorJuros(valoresContasReceberVO.getValorJuros());
+		contasReceber.setValorPago(valoresContasReceberVO.getValorPago());
+		contasReceber.setValorParcela(valoresContasReceberVO.getValor());
+		contasReceber.setPrograma(programa);
 
-        contasReceberDAO.salvar(contasReceber);
+		contasReceberDAO.salvar(contasReceber);
 
-        return contasReceber;
-    }
+		return contasReceber;
+	}
 
-    public List<ContasReceber> filtrarContasReceber(PesquisaContasReceberVO pesquisaContasReceberVO) {
+	public List<ContasReceber> filtrarContasReceber(PesquisaContasReceberVO pesquisaContasReceberVO) {
 
-        return contasReceberDAO.filtrarContasReceber(pesquisaContasReceberVO);
-    }
+		return contasReceberDAO.filtrarContasReceber(pesquisaContasReceberVO);
+	}
 
-    public List<ContasReceber> buscarContasReceberPacienteTipoBoleto(Long codigoCliente, boolean agruparContas) {
+	public List<ContasReceber> buscarContasReceberPacienteTipoBoleto(Long codigoCliente, boolean agruparContas) {
 
-        return contasReceberDAO.buscarContasReceberPacienteTipoBoleto(codigoCliente, agruparContas);
-    }
+		return contasReceberDAO.buscarContasReceberPacienteTipoBoleto(codigoCliente, agruparContas);
+	}
 
 }

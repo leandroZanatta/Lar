@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import br.com.lar.repository.model.pk.ContasReceberBoletoPk;
@@ -25,4 +27,7 @@ public class ContasReceberBoleto implements Serializable {
 	@Column(name = "cd_contasreceber", insertable = false, updatable = false)
 	private Long codigoContasReceber;
 
+	@OneToOne(optional = false)
+	@JoinColumn(name = "cd_contasreceber", insertable = false, updatable = false)
+	private ContasReceber contasReceber;
 }
